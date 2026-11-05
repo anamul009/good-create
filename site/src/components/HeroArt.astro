@@ -1,0 +1,25 @@
+---
+// Decorative header art for pages without their own photo (Solutions, Technology).
+// @POP core with six connected nodes. HTML nodes + SVG lines, positioned by CSS classes (CSP-safe).
+import Icon from './Icon.astro';
+interface Props { variant?: 'products' | 'tech' }
+const { variant = 'products' } = Astro.props;
+const icons = variant === 'products'
+  ? ['lock', 'device', 'tv', 'users', 'key', 'layers']
+  : ['device', 'device', 'device', 'device', 'device', 'device'];
+const pos = [-90, -30, 30, 90, 150, 210].map((d) => [
+  +(50 + 38 * Math.cos((d * Math.PI) / 180)).toFixed(2),
+  +(50 + 38 * Math.sin((d * Math.PI) / 180)).toFixed(2),
+]);
+const chords: [number, number][] = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,0],[0,2],[1,3],[2,4],[3,5],[4,0],[5,1]];
+---
+<div class:list={['hero-art', `hero-art--${variant}`]} aria-hidden="true">
+  <svg class="ha-lines" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <circle cx="50" cy="50" r="38" class="ha-ring" />
+    <circle cx="50" cy="50" r="48" class="ha-ring ha-ring--outer" />
+    {variant === 'tech' && chords.map(([a, b]) => <line class="ha-chord" x1={pos[a][0]} y1={pos[a][1]} x2={pos[b][0]} y2={pos[b][1]} />)}
+    {pos.map((p, i) => <line class={`ha-spoke mesh-pulse mesh-pulse--${i % 3}`} x1="50" y1="50" x2={p[0]} y2={p[1]} />)}
+  </svg>
+  <span class="ha-core"><strong>@POP</strong></span>
+  {icons.map((ic, i) => <span class={`ha-node ha-node--${i}`}><Icon name={ic} /></span>)}
+</div>

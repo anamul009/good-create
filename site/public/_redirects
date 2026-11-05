@@ -1,0 +1,12 @@
+# Old WordPress pages -> new Japanese pages (Netlify / Cloudflare Pages)
+/pop                 /technology/        301
+/pop/                /technology/        301
+/contact_us/         /contact/           301
+/privacy_policy/     /privacy/           301
+/personal_information/ /privacy/         301
+/website_production/ /solutions/#digital 301
+/web_marketing/      /solutions/#digital 301
+/wp-content/uploads/2026/11/ato-creator-panfu.pdf /docs/atcreator-brochure.pdf 301
+/wp-content/uploads/2025/07/hp-waravi-chirashi-19-gc-takamastu-2025-07-11-aut.pdf /docs/waravi-flyer.pdf 301
+/2025/*              /news/              301
+/2023/*              /news/              301

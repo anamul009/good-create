@@ -1,0 +1,25 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import { img } from '../data/images';
+import { getLang, t, localize } from '../i18n';
+const lang = getLang(Astro.url);
+const T = t(lang);
+interface Props { title?: string; text?: string; image?: ImageMetadata }
+const { title = T.ctaTitle, text = T.ctaText, image = img.womanPhoneStreet } = Astro.props;
+---
+<section class="cta on-dark" aria-labelledby="cta-title">
+  <Picture class="cover" src={image} alt="" formats={['avif', 'webp']} widths={[640, 1024, 1600]} sizes="100vw" />
+  <div class="cta-shade"></div>
+  <div class="wrap cta-inner">
+    <div>
+      <span class="eyebrow reveal">{T.ctaEyebrow}</span>
+      <h2 id="cta-title" class="h1 reveal">{title}</h2>
+      <p class="lead reveal">{text}</p>
+      <div class="btn-row reveal">
+        <a class="btn btn--primary" href={localize(lang, '/contact/')}>{T.contact} <Icon name="arrow" /></a>
+        <a class="btn btn--glass" href={localize(lang, '/solutions/')}>{T.explore}</a>
+      </div>
+    </div>
+  </div>
+</section>

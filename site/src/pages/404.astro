@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { img } from '../data/images';
+// One static 404 serves both languages, so it carries both.
+---
+<Base title="ページが見つかりません / Page not found">
+  <PageHero image={img.skyline} title="ページが見つかりません。" lead="お探しのページは、サイトリニューアルにより移動した可能性があります。 This page may have moved during our redesign.">
+    <div class="page-hero-meta reveal">
+      <a class="btn btn--primary" href="/" lang="ja">トップページへ</a>
+      <a class="btn btn--glass" href="/en/">English home</a>
+      <a class="btn btn--glass" href="/contact/" lang="ja">お問い合わせ</a>
+    </div>
+  </PageHero>
+</Base>

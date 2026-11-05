@@ -1,0 +1,49 @@
+# Security hardening for Apache (e.g. Xserver, Sakura). Requires mod_headers and mod_rewrite.
+Options -Indexes -MultiViews
+ServerSignature Off
+FileETag None
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Force HTTPS and canonical www host
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} !^www\. [NC]
+  RewriteRule ^ https://www.gc-c.co.jp%{REQUEST_URI} [L,R=301]
+  # Block hidden files except .well-known
+  RewriteRule "(^|/)\.(?!well-known/)" - [F]
+  # Only allow safe methods on static content (the contact API is handled separately)
+  RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|OPTIONS)$
+  RewriteCond %{REQUEST_URI} !^/api/
+  RewriteRule ^ - [R=405,L]
+  # Old WordPress probes return 410 Gone
+  RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php|wp-json) - [G,L]
+  # Old WordPress pages -> new Japanese pages (keeps search rankings and bookmarks)
+  RewriteRule ^pop/?$ /technology/ [R=301,L]
+  RewriteRule ^contact_us/?$ /contact/ [R=301,L]
+  RewriteRule ^(privacy_policy|personal_information)/?$ /privacy/ [R=301,L]
+  RewriteRule ^(website_production|web_marketing)/?$ /solutions/#digital [R=301,NE,L]
+  RewriteRule ^20[0-9]{2}/[0-9]{2}/[0-9]{2}/ /news/ [R=301,L]
+  # Old brochure PDFs -> self-hosted copies
+  RewriteRule ^wp-content/uploads/2026/11/ato-creator-panfu\.pdf$ /docs/atcreator-brochure.pdf [R=301,L]
+  RewriteRule ^wp-content/uploads/2025/07/hp-waravi-chirashi-[^/]*\.pdf$ /docs/waravi-flyer.pdf [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'; manifest-src 'self'; object-src 'none'; upgrade-insecure-requests"
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+  Header always set Cross-Origin-Embedder-Policy "require-corp"
+  Header always set X-Permitted-Cross-Domain-Policies "none"
+  Header always unset X-Powered-By
+  Header unset X-Powered-By
+  <FilesMatch "\.(css|js|woff2?|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+ErrorDocument 404 /404.html

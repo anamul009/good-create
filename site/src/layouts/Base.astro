@@ -1,0 +1,94 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Intro from '../components/Intro.astro';
+import { getLang, t, pathFor, langs, defaultLang } from '../i18n';
+import { company } from '../data/content/en';
+
+interface Props { title?: string; description?: string; overlay?: boolean; }
+const lang = getLang(Astro.url);
+const T = t(lang);
+const { title, overlay = true, description = T.defaultDescription } = Astro.props;
+const fullTitle = title ? `${title} — ${T.siteName}` : T.defaultTitle;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(`/og/${lang}.png`, Astro.site).href;
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/en/';
+// Organization structured data (Google knowledge panel). Facts from data/content/en.ts.
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://www.gc-c.co.jp/#organization',
+  name: lang === 'ja' ? company.nameJa : company.name,
+  alternateName: lang === 'ja' ? company.name : company.nameJa,
+  url: new URL(lang === 'ja' ? '/' : '/en/', Astro.site).href,
+  logo: new URL('/og/logo.png', Astro.site).href,
+  foundingDate: '2000-03-01',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '346-3 Okadashimo, Ayauta-cho',
+    addressLocality: 'Marugame',
+    addressRegion: 'Kagawa',
+    postalCode: '761-2402',
+    addressCountry: 'JP',
+  },
+  contactPoint: { '@type': 'ContactPoint', telephone: '+81-877-57-1111', contactType: 'customer service', availableLanguage: ['Japanese', 'English'] },
+};
+const alternates = langs.map((l) => ({ lang: l, href: new URL(pathFor(Astro.url, l), Astro.site).href }));
+
+// Defence-in-depth: the same policy is also sent as an HTTP header (see public/_headers and public/.htaccess).
+// frame-ancestors only works as a header, so it is omitted here.
+const csp = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "style-src 'self'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "media-src 'self'",
+  "connect-src 'self'",
+  "form-action 'self'",
+  "base-uri 'none'",
+  "manifest-src 'self'",
+  "upgrade-insecure-requests",
+].join('; ');
+---
+<!doctype html>
+<html lang={lang} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content={csp} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates.find((a) => a.lang === defaultLang)!.href} />
+    <meta name="theme-color" content="#0a1730" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={T.siteName} />
+    <meta property="og:locale" content={lang === 'ja' ? 'ja_JP' : 'en_US'} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={T.defaultTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+    {isHome && <script type="application/ld+json" is:inline set:html={JSON.stringify(orgLd)} />}
+    <script is:inline src="/js/intro.js"></script>
+    <script is:inline src="/js/site.js" defer></script>
+  </head>
+  <body class:list={[overlay && 'has-overlay-header']}>
+    <Intro />
+    <a class="skip-link" href="#main">{T.skip}</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

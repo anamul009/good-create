@@ -1,0 +1,221 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Cta from '../components/Cta.astro';
+import HeroArt from '../components/HeroArt.astro';
+import LocalNav from '../components/LocalNav.astro';
+import { getContent } from '../data/site';
+import { img, solutionMedia } from '../data/images';
+import { getLang, localize } from '../i18n';
+
+const lang = getLang(Astro.url);
+const L = (href: string) => localize(lang, href);
+const { patents, solutions } = getContent(lang);
+
+const T = {
+  en: {
+    title: 'Technology — @POP',
+    desc: '@POP (Personal Own Protocol) is Good Create’s patented technology: no cloud database, no collection of personal information, encrypted IDs and peer-to-peer communication.',
+    crumb: 'Technology',
+    eyebrow: 'Core technology · @POP',
+    h1: 'Your information, kept where it belongs — with you.',
+    lead: 'Personal Own Protocol is a patented approach to identity, data and communication. Keep data on the device. Share only what is needed, when it is needed.',
+    chip: 'Patented in JP · US · CN · KR',
+    secs: ['The problem', 'A different model', 'The idea', 'Authentication', 'Patents', 'Applications'],
+    problemAlt: 'A woman with a smartphone surrounded by icons representing her personal data',
+    problemTitle: 'We hand more and more of ourselves to the cloud.',
+    problemP1: 'Names, addresses, phone numbers, IDs, activity history. The more convenient digital life becomes, the more personal information collects on central servers — and the more there is to lose in a single breach.',
+    problemP2: ['@POP starts from a different question. Not only ', '“how do we protect it?”', ' but ', '“where should it be kept at all?”'],
+    compareTitle: 'Central database vs. @POP',
+    badLabel: 'Conventional',
+    badTitle: 'Everything on one server',
+    bad: ['Personal data accumulates in one place', 'One breach can expose millions of records', 'Constant synchronization drives running costs', 'Users cannot see or control their own data'],
+    goodTitle: 'Data stays on each device',
+    good: ['No cloud database of personal information', 'No personal information collected', 'Nothing central worth stealing', 'Near-zero cost to deliver information'],
+    ideaTitle: 'You already do this with your wallet.',
+    ideaLead: 'Your licence, cards and employee ID live with you — not in someone else’s filing cabinet. You take out what is needed, at the moment it is needed, and put it back. @POP brings that ordinary habit into the digital world.',
+    ticks: [['Personal', 'each person’s own profile and attributes'], ['Own', 'held on their own device'], ['Protocol', 'connected to services only on demand']],
+    walletAlt: 'A wallet holding personal cards',
+    authTitle: 'Nothing to leak. Nothing to reuse.',
+    authLead: 'The authentication server holds only an encrypted ID that cannot be decrypted, plus a history code that changes every time. Even a complete compromise of the server yields nothing usable.',
+    steps: [
+      ['Activate', 'Each device is enrolled with an activation key and call number. No name, e-mail or phone number required.'],
+      ['Encrypt', 'An encrypted ID lives on the device. The server keeps only its non-decryptable counterpart.'],
+      ['Rotate', 'A history code is regenerated each time. A copied key fails — the code history exists only on the real device.'],
+    ],
+    facts: [['server', 'On the server', 'Encrypted ID and sync code only'], ['eye-off', 'Personal data', 'None collected'], ['layers', 'Deployment', 'Your own servers, or managed'], ['nodes', 'Communication', 'Encrypted peer-to-peer']],
+    patentsTitle: 'Protected internationally.',
+    edgeEyebrow: 'Not either / or',
+    edgeTitle: ['Cloud ', 'and', ' edge.'],
+    edgeLead: '@POP doesn’t reject the cloud. The cloud delivers services and runs computation. The edge — your device — holds what belongs to you. The point is to stop assuming everything must be collected in the center.',
+    appsTitle: 'Built on @POP.',
+    ctaTitle: 'See @POP in your environment.',
+    ctaText: 'Our engineers can walk your security team through the architecture and deployment options.',
+  },
+  ja: {
+    title: 'テクノロジー — @POP',
+    desc: '@POP（Personal Own Protocol）は、クラウドデータベース不要・個人情報不取得を実現するグッドクリエイトの特許技術です。暗号化IDとP2P通信で、情報を本人の端末に保持します。',
+    crumb: 'テクノロジー',
+    eyebrow: 'Core technology · @POP',
+    h1: '自分の情報は、自分の手元に。',
+    lead: 'Personal Own Protocol は、本人確認・データ・通信のための特許技術です。情報は端末に置き、必要なときに、必要なものだけを共有します。',
+    chip: '日本・米国・中国・韓国で特許取得',
+    secs: ['課題', '新しいモデル', '発想', '認証のしくみ', '特許', '活用例'],
+    problemAlt: '個人データを表すアイコンに囲まれ、スマートフォンを持つ女性',
+    problemTitle: '私たちは、たくさんの情報をデジタルに預けている。',
+    problemP1: '氏名、住所、電話番号、ID、利用履歴。デジタルが便利になるほど、個人情報は中央のサーバーに集まり、一度の漏えいで失われるものも大きくなります。',
+    problemP2: ['@POP は、別の問いから始まります。', '「どう守るか」', 'だけでなく、', '「どこに持つか」。'],
+    compareTitle: '中央データベースと @POP',
+    badLabel: '従来型',
+    badTitle: 'すべてをひとつのサーバーに',
+    bad: ['個人データが一か所に蓄積される', '一度の漏えいで数百万件が流出しうる', '常時同期のため運用コストがかさむ', '利用者が自分のデータを把握・管理できない'],
+    goodTitle: 'データは各端末にとどまる',
+    good: ['個人情報のクラウドデータベースが不要', '個人情報を取得しない', '中央に盗む価値のあるものがない', '情報配信のコストがほぼゼロ'],
+    ideaTitle: 'それは、財布と同じこと。',
+    ideaLead: '運転免許証やカード、社員証は、誰かの書庫ではなく自分の手元にあります。必要な場面で必要なものを取り出し、また戻す。@POP は、この当たり前をデジタルの世界にもたらします。',
+    ticks: [['Personal', '一人ひとりの情報・属性'], ['Own', '自分自身の端末に'], ['Protocol', '必要なときだけサービスとつなぐ仕組み']],
+    walletAlt: '個人のカードが入った財布',
+    authTitle: '漏れるものも、使い回せるものもない。',
+    authLead: '認証サーバーが保持するのは、復号できない暗号化IDと、毎回変わる履歴コードだけ。サーバーが丸ごと侵害されても、使える情報は何も得られません。',
+    steps: [
+      ['登録', 'アクティベーションキーと通話番号で端末を登録。氏名・メールアドレス・電話番号は不要です。'],
+      ['暗号化', '暗号化IDは端末内に保持。サーバーには復号できない対応情報だけが残ります。'],
+      ['更新', '履歴コードは毎回再生成。キーを複製しても、コード履歴は本物の端末にしかないため認証できません。'],
+    ],
+    facts: [['server', 'サーバー上', '暗号化IDと同期コードのみ'], ['eye-off', '個人データ', '取得しない'], ['layers', '導入形態', '自社サーバーまたはマネージド'], ['nodes', '通信', '暗号化されたP2P']],
+    patentsTitle: '国際的に保護された技術。',
+    edgeEyebrow: 'Not either / or',
+    edgeTitle: ['クラウド', 'と', 'エッジ。'],
+    edgeLead: '@POP はクラウドを否定しません。クラウドはサービス提供や必要な処理を担い、エッジ（あなたの端末）は本人の情報を持つ。大切なのは「すべてを中央に集める」ことを前提にせず、情報の性質に応じて適切な場所で管理することです。',
+    appsTitle: '@POP から生まれた製品。',
+    ctaTitle: '@POP を、貴社の環境で。',
+    ctaText: '当社エンジニアが、アーキテクチャと導入方法について貴社のセキュリティ担当者さまにご説明します。',
+  },
+}[lang];
+
+const ids = ['problem', 'model', 'idea', 'authentication', 'patents', 'applications'];
+const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
+---
+<Base title={T.title} description={T.desc}>
+  <PageHero crumbs={[{ label: T.crumb }]} eyebrow={T.eyebrow} title={T.h1} lead={T.lead}>
+    <HeroArt slot="art" variant="tech" />
+    <div class="page-hero-meta reveal">
+      <span class="chip"><span class="dot"></span>{T.chip}</span>
+      <span class="chip">PCT/JP2020/035327</span>
+    </div>
+  </PageHero>
+  <LocalNav items={secs} title="@POP" />
+
+  <section id="problem" class="section">
+    <div class="wrap">
+      <div class="split split--center">
+        <div class="reveal">
+          <div class="media"><Picture src={img.womanPhoneData} alt={T.problemAlt} formats={['avif', 'webp']} widths={[480, 900]} sizes="(min-width: 960px) 42vw, 100vw" /></div>
+        </div>
+        <div>
+          <span class="eyebrow reveal"><b>01</b>{T.secs[0]}</span>
+          <h2 class="h2 reveal">{T.problemTitle}</h2>
+          <p class="lead reveal">{T.problemP1}</p>
+          <p class="lead reveal">{T.problemP2[0]}<strong>{T.problemP2[1]}</strong>{T.problemP2[2]}<strong>{T.problemP2[3]}</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="model" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>02</b>{T.secs[1]}</span>
+        <h2 class="h2 reveal">{T.compareTitle}</h2>
+      </div>
+      <div class="compare">
+        <div class="bad reveal">
+          <span class="label">{T.badLabel}</span>
+          <h3>{T.badTitle}</h3>
+          <ul>{T.bad.map((b) => <li><Icon name="x" />{b}</li>)}</ul>
+        </div>
+        <div class="is-good reveal">
+          <span class="label">@POP</span>
+          <h3>{T.goodTitle}</h3>
+          <ul>{T.good.map((g) => <li><Icon name="check" />{g}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="idea" class="section">
+    <div class="wrap">
+      <div class="split split--center split--rev">
+        <div>
+          <span class="eyebrow reveal"><b>03</b>{T.secs[2]}</span>
+          <h2 class="h2 reveal">{T.ideaTitle}</h2>
+          <p class="lead reveal">{T.ideaLead}</p>
+          <ul class="ticks reveal">
+            {T.ticks.map(([k, v]) => <li><Icon name="check" /><span><strong>{k}</strong> — {v}</span></li>)}
+          </ul>
+        </div>
+        <div class="reveal">
+          <div class="media"><Picture src={img.wallet} alt={T.walletAlt} formats={['avif', 'webp']} widths={[480, 900]} sizes="(min-width: 960px) 50vw, 100vw" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="authentication" class="section section--dark">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>04</b>{T.secs[3]}</span>
+        <h2 class="h2 reveal">{T.authTitle}</h2>
+        <p class="lead reveal">{T.authLead}</p>
+      </div>
+      <div class="steps">
+        {T.steps.map(([h, p]) => <div class="step reveal"><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+      <div class="grid grid--4 tech-facts">
+        {T.facts.map(([ico, h, p]) => <div class="card reveal"><span class="ico"><Icon name={ico} /></span><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section id="patents" class="section">
+    <div class="wrap">
+      <div class="split split--even">
+        <div>
+          <span class="eyebrow reveal"><b>05</b>{T.secs[4]}</span>
+          <h2 class="h2 reveal">{T.patentsTitle}</h2>
+          <ul class="patent-list reveal">{patents.map((p) => <li><b>{p.code}</b><em>{p.region}</em><span>{p.number}</span></li>)}</ul>
+        </div>
+        <div>
+          <span class="eyebrow reveal"><b>05</b>{T.edgeEyebrow}</span>
+          <h2 class="h2 reveal">{T.edgeTitle[0]}<span class="grad-text">{T.edgeTitle[1]}</span>{T.edgeTitle[2]}</h2>
+          <p class="lead reveal">{T.edgeLead}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="applications" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>06</b>{T.secs[5]}</span>
+        <h2 class="h2 reveal">{T.appsTitle}</h2>
+      </div>
+      <div class="grid grid--4">
+        {solutions.slice(0, 4).map((s) => (
+          <article class="icard reveal">
+            <div class="media"><Picture src={solutionMedia[s.slug].feature} alt="" formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 1040px) 25vw, 50vw" /></div>
+            <div class="icard-body">
+              <span class="icard-meta"><span class="tag">{s.category}</span></span>
+              <h3><a class="stretch" href={L(`/solutions/${s.slug}/`)}>{s.name}</a></h3>
+              <p>{s.tagline}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta title={T.ctaTitle} text={T.ctaText} />
+</Base>

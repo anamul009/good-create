@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { getContent } from '../data/site';
+import { logos } from '../data/images';
+import { getLang, t, localize } from '../i18n';
+const lang = getLang(Astro.url);
+const T = t(lang);
+const { company, nav } = getContent(lang);
+const L = (href: string) => localize(lang, href);
+const year = new Date().getFullYear();
+const groups = nav.filter((n) => n.children);
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cta">
+      <div>
+        <a href={L('/')} aria-label={T.homeAria}><Image src={logos.gcWhite} alt={T.siteName} height={64} class="footer-logo" /></a>
+        <p>{T.tagline}</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={L('/contact/')}>{T.contact} <Icon name="arrow" /></a>
+        <a class="btn btn--glass" href="tel:+81877571111"><Icon name="phone" />0877-57-1111</a>
+      </div>
+    </div>
+
+    <div class="footer-map">
+      {groups.map((g) => (
+        <div>
+          <h2><a href={L(g.href)}>{g.label}</a></h2>
+          <ul>{g.children!.map((c) => <li><a href={L(c.href)}>{c.label}</a></li>)}</ul>
+        </div>
+      ))}
+      <div>
+        <h2>{T.information}</h2>
+        <ul>
+          <li><a href={L('/news/')}>{T.news}</a></li>
+          <li><a href={L('/contact/')}>{T.contactShort}</a></li>
+          <li><a href={L('/privacy/')}>{T.privacy}</a></li>
+          <li><a href="https://securitytalk.jp/" target="_blank" rel="noopener noreferrer">{T.stSite}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-offices">
+      {company.offices.map((o) => (
+        <div>
+          <h2>{o.label}</h2>
+          <address>{o.lines.join(lang === 'ja' ? ' ' : ', ')}</address>
+          {o.tel && <p>{T.tel} {o.tel}</p>}
+        </div>
+      ))}
+    </div>
+
+    <div class="footer-bottom">
+      <span>© {year} Good Create Co., Ltd. {T.rights}</span>
+      <nav aria-label={T.legal}>
+        <a href={L('/privacy/')}>{T.privacy}</a>
+        <a href="/.well-known/security.txt">{T.security}</a>
+        <a href="#main" class="to-top">{T.toTop} <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 7.5 6 4.5 9 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></a>
+      </nav>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,330 @@
+---
+// @CREATOR — store-app builder. Content from the @CREATOR brochure (public/docs/atcreator-brochure.pdf).
+import { Picture, Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Cta from '../components/Cta.astro';
+import LocalNav from '../components/LocalNav.astro';
+import { creator as C } from '../data/images';
+import { getLang, localize } from '../i18n';
+
+const lang = getLang(Astro.url);
+const L = (href: string) => localize(lang, href);
+const brochure = '/docs/atcreator-brochure.pdf';
+
+const T = {
+  en: {
+    title: '@CREATOR — store-app builder',
+    desc: '@CREATOR lets shops build their own smartphone app from templates — booking, coupons, stamp cards, e-commerce, chat and @POP delivery included.',
+    crumbs: ['Solutions', '@CREATOR'],
+    eyebrow: 'Store-app builder',
+    h1: 'Your own store app, without writing code.',
+    lead: 'App development usually takes a lot of time and money. With @CREATOR, shops pick a template, add photos and text, and publish an app their customers keep on their home screen.',
+    chips: ['@POP Contents Management System', 'Brochure (PDF, Japanese)'],
+    nav: { overview: 'Overview', build: 'How to build', features: 'Features', screens: 'Screens', templates: 'Templates', pop: '@POP', support: 'Support' },
+    logoAlt: '@CREATOR logo',
+    mockAlt: 'A beauty salon app made with @CREATOR',
+    ovTitle: 'Six reasons to choose @CREATOR.',
+    ovLead: 'Your icon stays on your customers’ smartphones — a direct line to the people who already like your shop.',
+    merits: [
+      ['@POP', 'Our patented @POP technology predicts what each user wants from their phone’s location and delivers your message at the right moment.'],
+      ['Branding', 'An app designed around your shop strengthens your brand.'],
+      ['Incentive', 'Coupons and stamp cards raise repeat visits and cut costs.'],
+      ['Speed', 'Build an app quickly, simply and at low cost.'],
+      ['Quality', 'Choose a standard template and get a high-quality app.'],
+      ['Multifunctional', 'Booking, e-commerce, points and chat come as standard.'],
+    ],
+    talk: 'Talk to our team',
+    buildEyebrow: 'How to build',
+    buildTitle: 'Four steps, with a live preview.',
+    steps: [
+      ['Choose a template', 'Pick the design you like.'],
+      ['Choose features', 'Select the features you want to use from the menu.'],
+      ['Create menus', 'Add icons, menu images and text.'],
+      ['Name your app', 'Register the app name and icon — done.'],
+    ],
+    preview: 'You build while watching a preview, so there is no rework after launch — even without programming skills.',
+    featEyebrow: 'Key features',
+    featTitle: 'Everything a shop app needs, built in.',
+    featLead: 'Turn on what you need from the admin screen. High-end features come at no extra cost.',
+    features: [
+      ['pin', 'Store information', 'Hours, access, phone, website links and Google Maps directions.'],
+      ['bell', 'News', 'Send events and announcements to app users first.'],
+      ['clock', 'Booking', 'Booking forms designed for salons and restaurants: party size, menu, stylists and available dates.'],
+      ['tag', 'Coupons', 'Issue discount coupons with expiry dates and see which ones bring customers back.'],
+      ['hash', 'Stamp cards', 'Scan a QR code or beacon on each visit. No paper cards to forget; rewards are set per shop.'],
+      ['layers', 'E-commerce', 'Sell products in the app, manage stock and check orders and payments from the admin screen.'],
+      ['mail', 'Chat', 'One-to-one chat between shop and customer, with images.'],
+      ['users', 'Social media', 'Link Facebook, X (Twitter) and Instagram to widen your reach.'],
+    ],
+    scrEyebrow: 'Screens',
+    scrTitle: 'What your customers see.',
+    screens: ['Store information', 'Access map', 'Coupons', 'Stamp card', 'Online shop', 'Cart', 'Salon booking', 'Restaurant booking', 'Chat'],
+    tplEyebrow: 'Templates',
+    tplTitle: 'Eight templates for food, beauty and apparel.',
+    tplLead: 'Choose your industry and layout, then enter your shop’s information to create an app that matches its atmosphere. More industries are planned.',
+    tpls: ['Beauty salon', 'Café', 'Restaurant', 'Apparel', 'Hair salon', 'Pizzeria', 'Fashion boutique'],
+    whyEyebrow: 'Why an app',
+    whyTitle: 'Customers look for deals in apps.',
+    stats: [
+      ['97%', 'Smartphone use in their 20s (96% 30s · 93% 40s · 74% 50s)'],
+      ['3h 9m', 'Average daily smartphone time'],
+      ['85%', 'Of that time is spent in apps'],
+      ['82.2%', 'Have installed a shop’s app in or near the shop'],
+    ],
+    source: 'Source: Ministry of Internal Affairs and Communications, 2017 survey on information and communications media use.',
+    popEyebrow: '@POP built in',
+    popTitle: 'The right message, at the right moment.',
+    popLead: 'Patented @POP keeps personal data on the user’s own device — no big data, no costly servers — and still delivers messages people actually want.',
+    pop: [
+      ['pin', 'Precise location', 'Reach people at a given station, near a competitor, or inside your shop.'],
+      ['users', 'Behavior history', 'Profile users on the device and send only to the right audience.'],
+      ['clock', 'Timing', 'Real-time delivery: time sales, specials, on the way home.'],
+      ['eye', 'Higher visibility', 'Notify the moment the phone is picked up or the cell tower changes.'],
+      ['nodes', 'Two-way community', 'Connect users and shops — e.g. send only to this week’s visitors.'],
+      ['play', 'Rich delivery', 'Video, images and audio, not just text.'],
+    ],
+    popLink: 'About @POP technology',
+    supEyebrow: 'Support',
+    supTitle: 'Support during creation and after launch.',
+    support: [
+      ['Support desk', 'A dedicated contact answers questions about @CREATOR.'],
+      ['Creation service', 'If preparing photos or content is hard, we can build the app for you (paid).'],
+      ['Marketing consulting', 'Advice on how to promote to customers after launch (paid).'],
+      ['In-house briefings', 'Help running briefings for your staff.'],
+      ['Store submission', 'We handle App Store and Google Play submission (paid).'],
+    ],
+    channels: 'Ask us by free dial, email, social media or LINE.',
+    opsTitle: 'App management service',
+    ops: 'Too busy to run the app yourself, or no one on staff comfortable with PCs? We can run it for you.',
+  },
+  ja: {
+    title: '@CREATOR — 店舗アプリ ビルドシステム',
+    desc: '@CREATOR は、テンプレートを選ぶだけで自社の店舗アプリが作れるビルドシステム。予約・クーポン・スタンプ・EC・チャット・@POP 配信を標準搭載。',
+    crumbs: ['ソリューション', '@CREATOR'],
+    eyebrow: '店舗アプリ ビルドシステム',
+    h1: 'プログラム不要で、自社アプリを。',
+    lead: 'アプリ開発には多大な時間と費用が必要です。@CREATOR はテンプレート型。写真やテキストを登録するだけで、お客様のスマートフォンに常にアイコンが表示される自社アプリが完成します。',
+    chips: ['@POP Contents Management System', 'パンフレット（PDF）'],
+    nav: { overview: '概要', build: '作成方法', features: '機能', screens: '画面', templates: 'テンプレート', pop: '@POP', support: 'サポート' },
+    logoAlt: '@CREATOR ロゴ',
+    mockAlt: '@CREATOR で作成した美容室のアプリ',
+    ovTitle: '@CREATOR 導入の6つのメリット。',
+    ovLead: 'お客様のスマートフォンにアイコンが常に表示。お店のファンと、直接つながり続けられます。',
+    merits: [
+      ['@POP', '弊社の特許技術「@POP」が、スマートフォンの位置情報などから欲しい情報を予測し、ユーザーの欲しいタイミングで配信します。'],
+      ['Branding', 'お店のブランディング向上に最適なアプリケーションが作成できます。'],
+      ['Incentive', 'クーポン、スタンプなどでリピート率のUPやコスト削減につながります。'],
+      ['Speed', '低コストで素早く、簡単にアプリが作成できます。'],
+      ['Quality', '標準テンプレートを選択するだけで高品質なアプリが完成します。'],
+      ['Multifunctional', '予約、EC、ポイントシステム、チャットなどを標準実装。'],
+    ],
+    talk: '担当者に相談する',
+    buildEyebrow: 'How to build',
+    buildTitle: 'プレビューを見ながら、4ステップで完成。',
+    steps: [
+      ['テンプレート選択', 'お好きなデザインのテンプレートを選びます。'],
+      ['機能メニュー選択', '利用したい機能をメニューから選択します。'],
+      ['各種メニュー作成', 'アイコンやメニューの画像、テキストを登録します。'],
+      ['アプリ名等を登録', 'アプリの名前やアイコンを登録して作成完了。'],
+    ],
+    preview: 'レイアウト等のイメージを確認しながら作成できるので、完成後の修正は必要ありません。プログラム技術がない方も安心して作成できます。',
+    featEyebrow: 'Key features',
+    featTitle: '店舗アプリに必要な機能を、標準搭載。',
+    featLead: '豊富な機能の中から、必要な機能を管理画面で簡単に設定。高性能な機能が追加費用なく利用できます。',
+    features: [
+      ['pin', '店舗情報', '営業時間・アクセス・電話番号・ウェブサイトのリンク、Googleマップ連携でのアクセス案内。'],
+      ['bell', '新着情報', 'イベントやお知らせなどの新着情報を、いち早くアプリユーザーに配信。'],
+      ['clock', '予約機能', '美容室・飲食店それぞれの専用予約フォーム。予約人数・メニュー・予約可能日・スタイリストを設定可能。'],
+      ['tag', 'クーポン', '割引タイプや有効期限を設定して簡単に発行。利用者数から効果も確認できます。'],
+      ['hash', 'スタンプ', '来店時にQRコードや専用ビーコンで自動付与。紙のカードが不要になり、特典も店舗ごとに設定可能。'],
+      ['layers', 'EC', 'アプリ内で商品を販売。商品追加・在庫管理・受注・決済状況の確認に対応。'],
+      ['mail', 'チャット', '店舗とアプリユーザーで1対1のチャット。画像を含めたやり取りも可能。'],
+      ['users', 'SNS連携', 'Facebook・X（Twitter）・Instagram と連動し、集客チャネルを拡大。'],
+    ],
+    scrEyebrow: 'Screens',
+    scrTitle: 'お客様のスマートフォンでは、こう見えます。',
+    screens: ['店舗情報', 'アクセスマップ', 'クーポン', 'スタンプ', 'ECショップ', 'カート', '美容院予約', '飲食店予約', 'チャット'],
+    tplEyebrow: 'Templates',
+    tplTitle: '飲食業・美容業・アパレル業の3業種、8つのテンプレート。',
+    tplLead: '業種とテンプレートを選び、店舗様が情報を入力するだけで、お店の雰囲気に合った独自のアプリが完成します。今後さまざまな業種に対応予定です。',
+    tpls: ['美容室', 'カフェ', 'レストラン', 'アパレル', 'ヘアサロン', 'ピザ店', 'セレクトショップ'],
+    whyEyebrow: 'Why an app',
+    whyTitle: '「お店の特典や情報はアプリでゲットする」時代。',
+    stats: [
+      ['97%', '20代のスマートフォン利用率（30代 96%・40代 93%・50代 74%）'],
+      ['3時間9分', '1日の平均利用時間'],
+      ['85%', 'そのうちアプリを使用している時間'],
+      ['82.2%', 'お店の中や近くで、店舗公式アプリをダウンロードしたことがある'],
+    ],
+    source: '出典：総務省「平成29年 情報通信メディアの利用時間と情報行動に関する調査報告書」',
+    popEyebrow: '@POP built in',
+    popTitle: '欲しい情報を、欲しい時、欲しい人に。',
+    popLead: '特許技術「@POP」は、個人情報やパーソナルデータを取得せず、ユーザーの端末の中に保管する全く新しい技術。サーバーやデータベースが不要で、情報配信にほとんどコストがかかりません。',
+    pop: [
+      ['pin', '高精度位置情報', '今○○駅にいる人、近所のライバル店にいる人、お店に入った人だけに配信。'],
+      ['users', '行動履歴', '端末内でプロファイルし、対象のユーザーだけに自動送信。'],
+      ['clock', 'タイミング情報', 'リアルタイム配信。タイムセールや帰宅時に合わせて配信。'],
+      ['eye', '視野率UP', 'スマートフォンを手に取った瞬間や、基地局が変わった瞬間に通知。'],
+      ['nodes', '双方向コミュニティ', 'ユーザーとクライアントの双方向コミュニティ。今週来店した方だけに自動送信。'],
+      ['play', 'リッチ配信対応', '文字だけでなく、動画・画像・音声での通知が可能。'],
+    ],
+    popLink: '@POP の技術について',
+    supEyebrow: 'Support',
+    supTitle: '制作時もリリース後も、充実のフォロー体制。',
+    support: [
+      ['サポートデスク', '@CREATOR に関するご質問は、専任担当者がお答えします。'],
+      ['作成代行', '写真素材や内容など、アプリの作成が難しい場合は作成を代行します（有料）。'],
+      ['コンサルティング', '運用後の顧客訴求方法のご相談など、コンサル業務も行っています（有料）。'],
+      ['社内説明会', '社内での運営説明会の実施をお手伝いします。'],
+      ['ストア申請代行', 'アプリのストア申請を代行します（有料）。'],
+    ],
+    channels: 'フリーダイヤル・メール・SNS・LINE など、お好きな方法でお問い合わせください。',
+    opsTitle: 'アプリの運用代行もご用意',
+    ops: '日々の業務が忙しく運営が難しい場合や、PCに詳しいスタッフがいない場合は、運営を代行します。',
+  },
+}[lang];
+
+const screenImgs = [C.scrStore, C.scrMap, C.scrCoupons, C.scrStamp, C.scrShop, C.scrCart, C.scrBooking, C.scrDining, C.scrChat];
+const tplImgs = [C.tplBeauty, C.tplCafe, C.tplDiner, C.tplApparel, C.tplSalon, C.tplPizza, C.tplForest];
+const secs = (['overview', 'build', 'features', 'screens', 'templates', 'pop', 'support'] as const).map((id) => ({ id, label: T.nav[id] }));
+const num = (id: string) => String(secs.findIndex((x) => x.id === id) + 1).padStart(2, '0');
+---
+<Base title={T.title} description={T.desc}>
+  <PageHero image={C.hero} crumbs={[{ label: T.crumbs[0], href: '/solutions/' }, { label: T.crumbs[1] }]} eyebrow={T.eyebrow} title={T.h1} lead={T.lead}>
+    <div class="page-hero-meta reveal">
+      <span class="chip"><span class="dot"></span>@CREATOR</span>
+      <span class="chip">{T.chips[0]}</span>
+      <a class="chip" href={brochure} target="_blank" rel="noopener">{T.chips[1]} ↗</a>
+    </div>
+  </PageHero>
+  <LocalNav items={secs} title="@CREATOR" />
+
+  <section id="overview" class="section">
+    <div class="wrap">
+      <div class="split split--center">
+        <div class="reveal phone-hero">
+          <figure class="phone phone--lg"><Image src={C.mockup} alt={T.mockAlt} widths={[300, 600]} sizes="300px" /></figure>
+        </div>
+        <div>
+          <Image class="creator-logo reveal" src={C.logo} alt={T.logoAlt} width={220} />
+          <span class="eyebrow reveal"><b>{num('overview')}</b>{T.nav.overview}</span>
+          <h2 class="h2 reveal">{T.ovTitle}</h2>
+          <p class="lead reveal">{T.ovLead}</p>
+          <dl class="merits reveal">
+            {T.merits.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+          </dl>
+          <a class="btn btn--primary reveal" href={L('/contact/')}>{T.talk} <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="build" class="section section--dark">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('build')}</b>{T.buildEyebrow}</span>
+        <h2 class="h2 reveal">{T.buildTitle}</h2>
+      </div>
+      <div class="steps steps--4">
+        {T.steps.map(([h, p]) => <div class="step reveal"><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+      <p class="build-note reveal"><Icon name="eye" /><span>{T.preview}</span></p>
+    </div>
+  </section>
+
+  <section id="features" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('features')}</b>{T.featEyebrow}</span>
+        <h2 class="h2 reveal">{T.featTitle}</h2>
+        <p class="lead reveal">{T.featLead}</p>
+      </div>
+      <div class="grid grid--4">
+        {T.features.map(([icon, h, p]) => (
+          <div class="card reveal"><span class="ico"><Icon name={icon} /></span><h3>{h}</h3><p>{p}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="screens" class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('screens')}</b>{T.scrEyebrow}</span>
+        <h2 class="h2 reveal">{T.scrTitle}</h2>
+      </div>
+    </div>
+    <div class="phone-strip" tabindex="0" role="region" aria-label={T.scrTitle}>
+      {screenImgs.map((src, i) => (
+        <figure class="phone reveal"><Image src={src} alt={T.screens[i]} widths={[220, 440]} sizes="220px" /><figcaption>{T.screens[i]}</figcaption></figure>
+      ))}
+    </div>
+  </section>
+
+  <section id="templates" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('templates')}</b>{T.tplEyebrow}</span>
+        <h2 class="h2 reveal">{T.tplTitle}</h2>
+        <p class="lead reveal">{T.tplLead}</p>
+      </div>
+      <div class="tpl-grid">
+        {tplImgs.map((src, i) => (
+          <figure class="phone phone--sm reveal"><Image src={src} alt={T.tpls[i]} widths={[180, 360]} sizes="180px" /><figcaption>{T.tpls[i]}</figcaption></figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal">{T.whyEyebrow}</span>
+        <h2 class="h2 reveal">{T.whyTitle}</h2>
+      </div>
+      <div class="stats stats--flush reveal">
+        {T.stats.map(([v, l]) => <div class="stat"><strong>{v}</strong><span>{l}</span></div>)}
+      </div>
+      <p class="source reveal">{T.source}</p>
+    </div>
+  </section>
+
+  <section id="pop" class="section section--dark">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('pop')}</b>{T.popEyebrow}</span>
+        <h2 class="h2 reveal">{T.popTitle}</h2>
+        <p class="lead reveal">{T.popLead}</p>
+      </div>
+      <div class="grid grid--3">
+        {T.pop.map(([icon, h, p], i) => (
+          <div class="card reveal"><span class="ico"><Icon name={icon} /></span><span class="num">{String(i + 1).padStart(2, '0')}</span><h3>{h}</h3><p>{p}</p></div>
+        ))}
+      </div>
+      <a class="link after-grid reveal" href={L('/technology/')}>{T.popLink} <Icon name="arrow" /></a>
+    </div>
+  </section>
+
+  <section id="support" class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('support')}</b>{T.supEyebrow}</span>
+        <h2 class="h2 reveal">{T.supTitle}</h2>
+      </div>
+      <div class="steps steps--5">
+        {T.support.map(([h, p]) => <div class="step reveal"><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+      <div class="ops reveal">
+        <div>
+          <h3>{T.opsTitle}</h3>
+          <p>{T.ops}</p>
+        </div>
+        <p class="ops-ch"><Icon name="phone" /><span>{T.channels}</span></p>
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

@@ -1,0 +1,24 @@
+---
+import { Picture } from 'astro:assets';
+import { getLang, t, localize } from '../i18n';
+interface Props { crumbs?: { label: string; href?: string }[]; title: string; lead?: string; eyebrow?: string; image?: ImageMetadata; position?: string }
+const { crumbs = [], title, lead, eyebrow, image } = Astro.props;
+const hasArt = Astro.slots.has('art');
+const lang = getLang(Astro.url);
+const T = t(lang);
+---
+<section class:list={['page-hero', !image && !hasArt && 'page-hero--plain', hasArt && 'page-hero--art']}>
+  {hasArt && <div class="page-hero-art"><slot name="art" /></div>}
+  {image && <Picture class="cover" src={image} alt="" formats={['avif', 'webp']} widths={[640, 1024, 1600, 2000]} sizes="100vw" loading="eager" fetchpriority="high" />}
+  <div class="page-hero-shade"></div>
+  <div class="wrap page-hero-inner">
+    <nav class="crumbs reveal" aria-label={T.breadcrumb}>
+      <a href={localize(lang, '/')}>{T.home}</a>
+      {crumbs.map((c) => (<><span aria-hidden="true">/</span>{c.href ? <a href={localize(lang, c.href)}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</>))}
+    </nav>
+    {eyebrow && <span class="eyebrow on-dark reveal">{eyebrow}</span>}
+    <h1 class="h1 reveal">{title}</h1>
+    {lead && <p class="lead reveal">{lead}</p>}
+    <slot />
+  </div>
+</section>

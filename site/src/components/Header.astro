@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { getContent } from '../data/site';
+import { logos } from '../data/images';
+import { getLang, t, localize, basePath, pathFor } from '../i18n';
+const lang = getLang(Astro.url);
+const T = t(lang);
+const { nav } = getContent(lang);
+const other = lang === 'ja' ? 'en' : 'ja';
+const switchHref = pathFor(Astro.url, other);
+const path = basePath(Astro.url.pathname);
+const isCurrent = (href: string) => href !== '/' && path.startsWith(href.split('#')[0]);
+const L = (href: string) => localize(lang, href);
+---
+<header class="site-header" data-header>
+  <div class="wrap header-bar">
+    <a href={L('/')} class="brand" aria-label={T.homeAria}>
+      <Image class="logo-color" src={logos.gc} alt="" height={60} loading="eager" />
+      <Image class="logo-white" src={logos.gcWhite} alt="" height={60} loading="eager" />
+    </a>
+
+    <nav class="nav" aria-label={T.primary}>
+      <ul class="nav-list">
+        {nav.map((n, i) => (
+          <li class:list={['nav-item', n.children && 'has-menu']} data-nav-item>
+            {n.children ? (
+              <>
+                <button class="nav-link" type="button" aria-expanded="false" aria-controls={`mega-${i}`} data-nav-trigger aria-current={isCurrent(n.href) ? 'page' : undefined}>
+                  {n.label}<svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                </button>
+                <div class="mega" id={`mega-${i}`} data-mega>
+                  <div class="wrap mega-inner">
+                    <div class="mega-intro">
+                      <span class="mega-kicker">{n.label}</span>
+                      <p>{n.intro}</p>
+                      <a class="link" href={L(n.href)}>{T.overview(n.label)} <Icon name="arrow" /></a>
+                    </div>
+                    <ul class:list={['mega-links', n.children.length > 4 && 'mega-links--2col']}>
+                      {n.children.map((c) => (
+                        <li>
+                          <a href={L(c.href)}>
+                            <span class="mega-title">{c.label}</span>
+                            {c.desc && <span class="mega-desc">{c.desc}</span>}
+                            <Icon name="arrow" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <a class="nav-link" href={L(n.href)} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+      <a class="lang-switch" href={switchHref} hreflang={other} lang={other} aria-label={T.switchAria}><Icon name="globe" /><span>{T.switchLabel}</span></a>
+      <a class="btn btn--primary btn--sm" href={L('/contact/')}>{T.contact}</a>
+    </nav>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
+      <span class="bars" aria-hidden="true"></span><span class="sr-only">{T.menu}</span>
+    </button>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label={T.menu} data-mobile-nav>
+  {nav.map((n) => n.children ? (
+    <details class="m-group">
+      <summary class="m-link">{n.label}<svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></summary>
+      <ul class="m-sub">
+        <li><a href={L(n.href)}>{T.overview(n.label)}</a></li>
+        {n.children.filter((c) => c.href !== n.href).map((c) => <li><a href={L(c.href)}>{c.label}</a></li>)}
+      </ul>
+    </details>
+  ) : (
+    <a class="m-link" href={L(n.href)}>{n.label}<Icon name="arrow" /></a>
+  ))}
+  <a class="btn btn--primary" href={L('/contact/')}>{T.contact}</a>
+  <a class="m-lang" href={switchHref} hreflang={other} lang={other}><Icon name="globe" />{T.switchLabel}</a>
+</nav>

@@ -1,0 +1,33 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import { getContent, formatDate } from '../data/site';
+import { img } from '../data/images';
+import { getLang } from '../i18n';
+
+const lang = getLang(Astro.url);
+const { news } = getContent(lang);
+const images = [img.halalCeremony, img.awardCeremony, img.skyline];
+const T = {
+  en: { title: 'News', desc: 'Announcements, awards and corporate news from Good Create.', eyebrow: 'Newsroom', lead: 'Announcements, awards and corporate updates from Good Create.' },
+  ja: { title: 'ニュース', desc: 'グッドクリエイトからのお知らせ、受賞、企業ニュース。', eyebrow: 'Newsroom', lead: 'グッドクリエイトからのお知らせ、受賞、企業ニュースをお届けします。' },
+}[lang];
+---
+<Base title={T.title} description={T.desc}>
+  <PageHero image={img.womanPhoneIcons} crumbs={[{ label: T.title }]} eyebrow={T.eyebrow} title={T.title} lead={T.lead} />
+  <section class="section">
+    <div class="wrap">
+      {news.map((n, i) => (
+        <article class="news-row reveal">
+          <div class="media"><Picture src={images[i % images.length]} alt="" formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 800px) 320px, 100vw" /></div>
+          <div>
+            <div class="icard-meta"><time datetime={n.date}>{formatDate(n.date)}</time><span class="tag">{n.tag}</span></div>
+            <h2>{n.title}</h2>
+            <p>{n.body}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>

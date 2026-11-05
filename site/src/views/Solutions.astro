@@ -1,0 +1,93 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Cta from '../components/Cta.astro';
+import HeroArt from '../components/HeroArt.astro';
+import DeviceArt from '../components/DeviceArt.astro';
+import { getContent } from '../data/site';
+import { solutionMedia } from '../data/images';
+import { getLang, localize } from '../i18n';
+
+const lang = getLang(Astro.url);
+const L = (href: string) => localize(lang, href);
+const { solutions, digitalServices } = getContent(lang);
+
+const T = {
+  en: {
+    title: 'Solutions',
+    desc: 'SecurityTalk, secure devices, Waravi, the Official Halal SNS and TSUGITE — products built on Good Create’s patented @POP technology.',
+    h1: 'Products built on one principle.',
+    lead: 'Keep information with the people it belongs to. Each Good Create product applies that idea to a different part of life — from government communication to the living-room TV.',
+    more: 'Learn more',
+    digitalEyebrow: 'Digital services',
+    digitalTitle: 'Web and no-code services for businesses.',
+    digitalLead: 'Alongside our platforms, we help organizations build and grow their presence online.',
+    brochure: 'Learn more',
+  },
+  ja: {
+    title: 'ソリューション',
+    desc: 'SecurityTalk、セキュア端末、Waravi、公式ハラールSNS、TSUGITE。グッドクリエイトの特許技術「@POP」を基盤とした製品群です。',
+    h1: 'ひとつの原則から生まれた製品。',
+    lead: '情報は、その持ち主のもとに。グッドクリエイトの製品は、この考え方を暮らしのさまざまな場面に届けます。政府の通信から、リビングのテレビまで。',
+    more: '詳しく見る',
+    digitalEyebrow: 'Digital services',
+    digitalTitle: '企業のためのWEB・ノーコードサービス。',
+    digitalLead: 'プラットフォーム事業とあわせて、企業のオンラインでの発信と成長を支援しています。',
+    brochure: '詳しく見る',
+  },
+}[lang];
+---
+<Base title={T.title} description={T.desc}>
+  <PageHero crumbs={[{ label: T.title }]} eyebrow="Solutions" title={T.h1} lead={T.lead}>
+    <HeroArt slot="art" variant="products" />
+  </PageHero>
+
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="ed-rows ed-rows--page">
+        {solutions.map((s, i) => (
+          <article class:list={['ed-row', i % 2 === 1 && 'ed-row--flip', `ed--${s.slug}`]}>
+            <a class="ed-media reveal" href={L(`/solutions/${s.slug}/`)} tabindex="-1" aria-hidden="true">
+              {s.slug === 'secure-device'
+                ? <DeviceArt />
+                : <Picture src={solutionMedia[s.slug].feature} alt="" formats={['avif', 'webp']} widths={[600, 900, 1200]} sizes="(min-width: 960px) 50vw, 100vw" />}
+              {s.status && <span class="ed-badge">{s.status}</span>}
+            </a>
+            <div class="ed-body reveal">
+              <div class="ed-meta"><span class="ed-num">{String(i + 1).padStart(2, '0')}</span><span class="ed-cat">{s.category}</span></div>
+              <h2 class="ed-title"><a href={L(`/solutions/${s.slug}/`)}>{s.name}</a></h2>
+              <p class="ed-tag">{s.tagline}</p>
+              <p class="ed-sum">{s.summary}</p>
+              <ul class="ed-points">{s.highlights.slice(0, 3).map((h) => <li><Icon name="check" />{h.title}</li>)}</ul>
+              <a class="link ed-link" href={L(`/solutions/${s.slug}/`)}>{T.more} <Icon name="arrow" /></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="digital" class="section" aria-labelledby="digital-title">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>+</b>{T.digitalEyebrow}</span>
+        <h2 id="digital-title" class="h2 reveal">{T.digitalTitle}</h2>
+        <p class="lead reveal">{T.digitalLead}</p>
+      </div>
+      <div class="grid grid--3">
+        {digitalServices.map((d, i) => (
+          <div class="card reveal">
+            <span class="ico"><Icon name={['layers', 'globe', 'bolt'][i]} /></span>
+            <h3>{d.name}</h3>
+            <p>{d.body}</p>
+            {d.href && <a class="link card-link" href={localize(lang, d.href)}>{T.brochure} <Icon name="arrow" /></a>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

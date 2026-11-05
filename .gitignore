@@ -1,0 +1,9 @@
+# Internal source documents (kept out of the public repo)
+/*.pdf
+
+# Local tool settings
+.claude/
+
+# OS files
+Thumbs.db
+.DS_Store

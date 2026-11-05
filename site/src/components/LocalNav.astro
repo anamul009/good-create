@@ -1,0 +1,14 @@
+---
+interface Props { items: { id: string; label: string }[]; title?: string }
+import { getLang, t } from '../i18n';
+const { items, title } = Astro.props;
+const T = t(getLang(Astro.url));
+---
+<nav class="local-nav" aria-label={title ?? T.onThisPage} data-local-nav>
+  <div class="wrap local-nav-inner">
+    {title && <span class="local-nav-title">{title}</span>}
+    <ul>
+      {items.map((it) => <li><a href={`#${it.id}`} data-local-link>{it.label}</a></li>)}
+    </ul>
+  </div>
+</nav>

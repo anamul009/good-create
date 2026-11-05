@@ -1,0 +1,199 @@
+---
+import { Picture, Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import Cta from '../components/Cta.astro';
+import LocalNav from '../components/LocalNav.astro';
+import DeviceArt from '../components/DeviceArt.astro';
+import { getContent } from '../data/site';
+import { solutionMedia } from '../data/images';
+import { getLang, localize } from '../i18n';
+
+interface Props { slug: string }
+const lang = getLang(Astro.url);
+const L = (href: string) => localize(lang, href);
+const { solutions } = getContent(lang);
+const idx = solutions.findIndex((x) => x.slug === Astro.props.slug);
+const s = solutions[idx];
+const next = solutions[(idx + 1) % solutions.length];
+const m = solutionMedia[s.slug];
+const nm = solutionMedia[next.slug];
+const icons = ['shield', 'lock', 'key', 'nodes', 'eye-off', 'device'];
+const stepsClass = s.steps?.length === 5 ? 'steps steps--5' : s.steps?.length === 4 ? 'steps steps--4' : 'steps';
+const isRoadmap = s.steps?.length === 5;
+const isWaravi = s.slug === 'waravi';
+
+const T = {
+  en: {
+    crumb: 'Solutions',
+    overview: 'Overview',
+    features: 'Features',
+    how: 'How it works',
+    roadmap: 'Roadmap',
+    inUse: 'In use',
+    recognition: 'Recognition',
+    details: 'Details',
+    different: `What makes ${s.name} different.`,
+    talk: 'Talk to our team',
+    keyFeatures: 'Key features',
+    featuresTitle: 'Designed for trust, end to end.',
+    roadmapTitle: 'Five phases, from app to device.',
+    howTitle: 'Simple by design.',
+    inUseTitle: 'Everyday life, on the big screen.',
+    glance: 'At a glance',
+    useCases: 'Use cases',
+    logo: `${s.name} logo`,
+    next: 'Next solution',
+    view: 'View solution',
+  },
+  ja: {
+    crumb: 'ソリューション',
+    overview: '概要',
+    features: '特長',
+    how: 'しくみ',
+    roadmap: 'ロードマップ',
+    inUse: '利用シーン',
+    recognition: '認証・評価',
+    details: '詳細',
+    different: `${s.name} が選ばれる理由。`,
+    talk: '担当者に相談する',
+    keyFeatures: 'Key features',
+    featuresTitle: '信頼のための、徹底した設計。',
+    roadmapTitle: 'アプリから端末まで、5つのフェーズ。',
+    howTitle: 'シンプルな設計。',
+    inUseTitle: '毎日の暮らしを、大きな画面で。',
+    glance: 'At a glance',
+    useCases: '活用シーン',
+    logo: `${s.name} ロゴ`,
+    next: 'Next solution',
+    view: '詳しく見る',
+  },
+}[lang];
+
+const howLabel = isRoadmap ? T.roadmap : T.how;
+const galleryLabel = isWaravi ? T.inUse : T.recognition;
+const secs = [
+  { id: 'overview', label: T.overview, on: true },
+  { id: 'features', label: T.features, on: true },
+  { id: 'how', label: howLabel, on: !!s.steps },
+  { id: 'gallery', label: galleryLabel, on: !!m.gallery },
+  { id: 'details', label: T.details, on: !!(s.facts || s.useCases || s.note) },
+].filter((x) => x.on);
+const num = (id: string) => String(secs.findIndex((x) => x.id === id) + 1).padStart(2, '0');
+---
+<Base title={s.name} description={s.summary}>
+  <PageHero image={m.hero} crumbs={[{ label: T.crumb, href: '/solutions/' }, { label: s.name }]} eyebrow={s.category} title={s.tagline} lead={s.summary}>
+    <div class="page-hero-meta reveal">
+      <span class="chip"><span class="dot"></span>{s.name}</span>
+      {s.status && <span class="chip">{s.status}</span>}
+      {s.external && <a class="chip" href={s.external.href} target="_blank" rel="noopener noreferrer">{s.external.label} ↗</a>}
+    </div>
+  </PageHero>
+  <LocalNav items={secs} title={s.name} />
+
+  <section id="overview" class="section">
+    <div class="wrap">
+      <div class="split split--center">
+        <div class="reveal">
+          {s.slug === 'secure-device'
+            ? <div class="media media--device" role="img" aria-label={m.alt}><DeviceArt /></div>
+            : <div class="media">
+                <Picture src={m.feature} alt={m.alt} formats={['avif', 'webp']} widths={[480, 900, 1200]} sizes="(min-width: 960px) 42vw, 100vw" />
+              </div>}
+        </div>
+        <div>
+          {m.logo && <Image class="sol-logo reveal" src={m.logo} alt={T.logo} width={96} />}
+          <span class="eyebrow reveal"><b>{num('overview')}</b>{T.overview}</span>
+          <h2 class="h2 reveal">{T.different}</h2>
+          <ul class="ticks reveal">
+            {s.highlights.slice(0, 3).map((h) => <li><Icon name="check" /><span><strong>{h.title}</strong> — {h.body}</span></li>)}
+          </ul>
+          <a class="btn btn--primary reveal" href={L('/contact/')}>{T.talk} <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>{num('features')}</b>{T.keyFeatures}</span>
+        <h2 class="h2 reveal">{T.featuresTitle}</h2>
+      </div>
+      <div class:list={['grid', s.highlights.length % 3 === 0 ? 'grid--3' : 'grid--4']}>
+        {s.highlights.map((h, i) => (
+          <div class="card reveal">
+            <span class="ico"><Icon name={icons[i % icons.length]} /></span>
+            <h3>{h.title}</h3>
+            <p>{h.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {s.steps && (
+    <section id="how" class="section section--dark">
+      <div class="wrap">
+        <div class="head">
+          <span class="eyebrow reveal"><b>{num('how')}</b>{howLabel}</span>
+          <h2 class="h2 reveal">{isRoadmap ? T.roadmapTitle : T.howTitle}</h2>
+        </div>
+        <div class={stepsClass}>
+          {s.steps.map((st) => <div class="step reveal"><h3>{st.title}</h3><p>{st.body}</p></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {m.gallery && (
+    <section id="gallery" class="section">
+      <div class="wrap">
+        <div class="head">
+          <span class="eyebrow reveal"><b>{num('gallery')}</b>{galleryLabel}</span>
+          <h2 class="h2 reveal">{isWaravi ? T.inUseTitle : T.recognition}</h2>
+        </div>
+        <div class:list={['gallery', m.gallery.length === 1 && 'gallery--single']}>
+          {m.gallery.map((g) => (
+            <figure class="media reveal"><Picture src={g.src} alt={g.alt} formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 900px) 25vw, 50vw" /></figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {(s.facts || s.useCases || s.note) && (
+    <section id="details" class:list={['section', m.gallery ? 'section--soft' : '']}>
+      <div class="wrap">
+        <div class="split">
+          <div>
+            <span class="eyebrow reveal"><b>{num('details')}</b>{T.glance}</span>
+            <h2 class="h2 reveal">{T.details}</h2>
+            {s.useCases && (<><p class="uc-label reveal">{T.useCases}</p><ul class="tags reveal">{s.useCases.map((u) => <li>{u}</li>)}</ul></>)}
+          </div>
+          <div class="reveal">
+            {s.facts && <dl class="facts">{s.facts.map((f) => <div><dt>{f.label}</dt><dd>{f.value}</dd></div>)}</dl>}
+            {s.note && <p class="note">{s.note}</p>}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section next-wrap">
+    <div class="wrap">
+      <article class="next reveal">
+        <div class="media"><Picture src={nm.feature} alt="" formats={['avif', 'webp']} widths={[480, 900]} sizes="(min-width: 860px) 50vw, 100vw" /></div>
+        <div class="next-body on-dark">
+          <span class="eyebrow">{T.next}</span>
+          <h2 class="h2"><a class="stretch" href={L(`/solutions/${next.slug}/`)}>{next.name}</a></h2>
+          <p>{next.tagline}</p>
+          <span class="link">{T.view} <Icon name="arrow" /></span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <Cta />
+</Base>

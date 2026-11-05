@@ -1,0 +1,21 @@
+---
+// First-open brand intro (once per visit, see /js/intro.js).
+// The real logo plane flies in from the bottom-left, rising toward the upper right,
+// lands in its place in the logo, then the wordmark slides out. Pure CSS animation.
+import { Image } from 'astro:assets';
+import plane from '../assets/brand/gc-plane.png';
+import wordmark from '../assets/brand/gc-wordmark.png';
+---
+<div class="intro" aria-hidden="true">
+  <div class="intro-logo">
+    <span class="intro-plane-wrap">
+      <span class="intro-dot intro-dot--1"></span>
+      <span class="intro-dot intro-dot--2"></span>
+      <span class="intro-dot intro-dot--3"></span>
+      <span class="intro-dot intro-dot--4"></span>
+      <span class="intro-dot intro-dot--5"></span>
+      <Image class="intro-plane" src={plane} alt="" height={126} loading="eager" />
+    </span>
+    <Image class="intro-word" src={wordmark} alt="" height={126} loading="eager" />
+  </div>
+</div>

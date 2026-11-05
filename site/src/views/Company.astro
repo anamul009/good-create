@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import LocalNav from '../components/LocalNav.astro';
+import Icon from '../components/Icon.astro';
+import Cta from '../components/Cta.astro';
+import { getContent } from '../data/site';
+import { img } from '../data/images';
+import { getLang, t } from '../i18n';
+
+const lang = getLang(Astro.url);
+const UI = t(lang);
+const { company, history } = getContent(lang);
+
+const T = {
+  en: {
+    title: 'Company',
+    desc: 'Good Create Co., Ltd. — founded in 2000 in Kagawa, Japan. Message from the President, philosophy, company profile, history and offices.',
+    crumb: 'Company',
+    eyebrow: 'Company information',
+    h1: 'Connecting people and society through trusted technology.',
+    lead: 'Founded in Kagawa in 2000, Good Create began with information distribution tools and medical systems. Today we develop patented @POP technology and the secure platforms built on it — for Japan and the world.',
+    secs: ['Message', 'Philosophy', 'Profile', 'History', 'Offices'],
+    msgEyebrow: 'Message from the President',
+    msgImgAlt: 'Tokyo skyline',
+    quote: '“Value every connection between people. Everything we do is for our customers.”',
+    msg: [
+      'Our first mission is to deliver what our customers need — quickly. The economy is changing faster than ever, and global competition is reshaping the environment every business operates in.',
+      'We believe long-term, trusted relationships with our customers are the true source of sustainable growth. As needs become more diverse and individual, we keep searching for better ways to put information and people at the heart of strategy.',
+      'To deliver valuable products to more people, we need both the network we have built over the years and a new kind of agility. Built on the connections we have made and teamwork second to none, we promise to keep evolving for our customers.',
+    ],
+    signRole: 'Representative Director & President',
+    signName: 'Masahiro Yamamoto',
+    pvmTitle: 'Philosophy, vision and mission',
+    pvm: ['Philosophy', 'Vision', 'Mission'],
+    profileTitle: 'Company profile',
+    asOf: 'As of November 2026',
+    rows: ['Company name', 'Established', 'Capital', 'Authorized shares', 'Issued shares', 'Officers', 'Business', 'Advisors', 'Banks'],
+    historyTitle: 'Our journey',
+    historyLead: 'From a software company in Kagawa to a provider of trust infrastructure for governments around the world.',
+    officesTitle: 'Kagawa and Tokyo',
+  },
+  ja: {
+    title: '企業情報',
+    desc: '株式会社グッドクリエイトの企業情報。代表挨拶、企業理念、会社概要、沿革、拠点のご案内。',
+    crumb: '企業情報',
+    eyebrow: 'Company',
+    h1: '信頼のテクノロジーで、人と社会をつなぐ。',
+    lead: '2000年に香川で創業したグッドクリエイトは、情報配信ツールや医療システムの開発から始まりました。現在は特許技術「@POP」と、それを基盤とするセキュアなプラットフォームを、日本と世界に向けて開発しています。',
+    secs: ['代表挨拶', '企業理念', '会社概要', '沿革', '拠点'],
+    msgEyebrow: 'Message',
+    msgImgAlt: '東京の街並み',
+    quote: '人と人のつながりを大切に。すべてはお客様のために。',
+    msg: [
+      'お客様のニーズにあったものをいち早くご提供することが我々の一番のミッションです。現在の経済は、かつてない変化にさらされており、本格的なグローバル競争の展開など、企業を取り巻くビジネス環境はこれまでにない急速な変化の時代を迎えています。',
+      'グッドクリエイトは、顧客との長期的で良好な関係構築こそが持続的かつ安定的な成長の源泉であると認識し、消費者の多様化・高度化・曖昧化する要求を満たすための戦略を常に模索しています。そして企業が成長し、競争優位を確立させるための経営要素として欠かせない、情報と人を戦略に生かせるプロセスを大事にしていきたいと考えます。',
+      '世の中は日々変化し、大衆性から個々を尊重した時代に変化する中で、より多くの人に便利で価値の高い商品を効率よく提供したい、そのためには今まで培ってきたネットワークと、今までにはないフットワークが必要です。今までに出会った人と人とのつながりと、どこにも負けないチームワークを財産にこれからもお客様のために進化し続けることを約束します。',
+    ],
+    signRole: '株式会社グッドクリエイト 代表取締役社長',
+    signName: '山本 真大',
+    pvmTitle: '企業理念・ビジョン・ミッション',
+    pvm: ['企業理念', 'ビジョン', 'ミッション'],
+    profileTitle: '会社概要',
+    asOf: '2026年11月現在',
+    rows: ['商号', '設立', '資本金', '発行可能株式総数', '発行済株式総数', '役員', '事業内容', '顧問', '取引銀行'],
+    historyTitle: '沿革',
+    historyLead: '香川のソフトウェア企業から、世界の政府機関に信頼インフラを届ける企業へ。',
+    officesTitle: '香川と東京の3拠点',
+  },
+}[lang];
+
+const ids = ['message', 'philosophy', 'profile', 'history', 'offices'];
+const sections = ids.map((id, i) => ({ id, label: T.secs[i] }));
+const telHref = (tel: string) => `tel:+81${tel.replace(/^0/, '').replace(/-/g, '')}`;
+---
+<Base title={T.title} description={T.desc}>
+  <PageHero image={img.skyline} crumbs={[{ label: T.crumb }]} eyebrow={T.eyebrow} title={T.h1} lead={T.lead} />
+  <LocalNav items={sections} title={T.crumb} />
+
+  <section id="message" class="section">
+    <div class="wrap">
+      <div class="message-grid message-grid--text">
+        <div class="message-head reveal">
+          <span class="eyebrow"><b>01</b>{T.msgEyebrow}</span>
+          <p class="quote">{T.quote}</p>
+        </div>
+        <div class="message-body reveal">
+          <div class="message-text">{T.msg.map((p) => <p>{p}</p>)}</div>
+          <p class="sign"><small>{T.signRole}</small>{T.signName}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="philosophy" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>02</b>{T.secs[1]}</span>
+        <h2 class="h2 reveal">{T.pvmTitle}</h2>
+      </div>
+      <div class="pvm">
+        <div class="pvm-row reveal"><span class="pvm-key"><Icon name="users" />{T.pvm[0]}</span><p>{company.philosophy}</p></div>
+        <div class="pvm-row reveal"><span class="pvm-key"><Icon name="eye" />{T.pvm[1]}</span><p>{company.vision}</p></div>
+        <div class="pvm-row reveal"><span class="pvm-key"><Icon name="bolt" />{T.pvm[2]}</span><p>{company.mission}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="profile" class="section">
+    <div class="wrap">
+      <div class="split">
+        <div class="sticky">
+          <span class="eyebrow reveal"><b>03</b>{T.secs[2]}</span>
+          <h2 class="h2 reveal">{T.profileTitle}</h2>
+          <p class="muted reveal">{T.asOf}</p>
+        </div>
+        <dl class="facts facts--table reveal">
+          <div><dt>{T.rows[0]}</dt><dd>{company.name}<br /><span class="muted">{company.nameJa}</span></dd></div>
+          <div><dt>{T.rows[1]}</dt><dd>{company.founded}</dd></div>
+          <div><dt>{T.rows[2]}</dt><dd>{company.capital}</dd></div>
+          <div><dt>{T.rows[3]}</dt><dd>{company.authorizedShares}</dd></div>
+          <div><dt>{T.rows[4]}</dt><dd>{company.issuedShares}</dd></div>
+          <div><dt>{T.rows[5]}</dt><dd><ul>{company.officers.map((o) => <li>{o.role}<span class="muted">{`  ${o.name}`}</span></li>)}</ul></dd></div>
+          <div><dt>{T.rows[6]}</dt><dd><ul class="dotted">{company.business.map((b) => <li>{b}</li>)}</ul></dd></div>
+          <div><dt>{T.rows[7]}</dt><dd><ul>{company.advisors.map((a) => <li>{a.role}<span class="muted">{`  ${a.name}`}</span></li>)}</ul></dd></div>
+          <div><dt>{T.rows[8]}</dt><dd><ul>{company.banks.map((b) => <li>{b}</li>)}</ul></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="history" class="section section--dark">
+    <div class="wrap">
+      <div class="split">
+        <div class="sticky">
+          <span class="eyebrow reveal"><b>04</b>{T.secs[3]}</span>
+          <h2 class="h2 reveal">{T.historyTitle}</h2>
+          <p class="lead reveal">{T.historyLead}</p>
+        </div>
+        <ol class="timeline">
+          {history.map((h) => (
+            <li class="reveal">
+              <span class="tl-year">{h.year}{h.month && <small>{h.month}</small>}</span>
+              <div><h3>{h.title}</h3><p>{h.body}</p></div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="offices" class="section section--soft">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>05</b>{T.secs[4]}</span>
+        <h2 class="h2 reveal">{T.officesTitle}</h2>
+      </div>
+      <div class="grid grid--3">
+        {company.offices.map((o) => (
+          <div class="office reveal">
+            <span class="city"><Icon name="pin" />{o.city}</span>
+            <h3>{o.label}</h3>
+            <address>{o.lines.map((l) => (<>{l}<br /></>))}</address>
+            {(o.tel || o.fax) && (
+              <p class="tel">
+                {o.tel && <>{UI.tel} <a href={telHref(o.tel)}>{o.tel}</a></>}
+                {o.fax && <><span class="sep">/</span>{UI.fax} {o.fax}</>}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Cta />
+</Base>
