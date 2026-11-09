@@ -1,0 +1,115 @@
+---
+// News article page. Text comes from the news data; the "related" and
+// "about" blocks reuse facts already published elsewhere on the site.
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { getContent, formatDate } from '../data/site';
+import { img } from '../data/images';
+import { getLang, localize } from '../i18n';
+
+interface Props { slug: string }
+const { slug } = Astro.props;
+const lang = getLang(Astro.url);
+const L = (href: string) => localize(lang, href);
+const { news, solutions } = getContent(lang);
+const i = news.findIndex((n) => n.slug === slug);
+const n = news[i];
+const newer = i > 0 ? news[i - 1] : null;
+const older = i < news.length - 1 ? news[i + 1] : null;
+const related = n.related.map((s) => solutions.find((x) => x.slug === s)!).filter(Boolean);
+
+const media: Record<string, { src: ImageMetadata; caption: { en: string; ja: string } }> = {
+  '2025-06-16-halal-certification': { src: img.halalCeremony, caption: { en: 'Halal certification ceremony for SecurityTalk', ja: 'SecurityTalk ハラール認証の授与式' } },
+  '2025-04-25-japan-resilience-award': { src: img.awardCeremony, caption: { en: '11th Japan Resilience Award 2025 ceremony', ja: '第11回ジャパン・レジリエンス・アワード 2025 授賞式' } },
+};
+const m = media[slug];
+
+const T = {
+  en: {
+    news: 'News', back: 'All news', related: 'Related solutions', about: 'About Good Create',
+    aboutText: 'Founded in Kagawa in 2000, Good Create Co., Ltd. develops @POP (Personal Own Protocol), a patented technology that keeps personal information on each person’s device instead of a cloud database, and builds secure communication, identity and platforms on it. @POP is patented in Japan, the United States, China and Korea.',
+    press: 'Media inquiries', pressText: 'For interviews and press materials, please contact us.', contact: 'Contact us',
+    share: 'Share', newer: 'Newer', older: 'Older', more: 'Learn more',
+  },
+  ja: {
+    news: 'ニュース', back: 'ニュース一覧へ', related: '関連するソリューション', about: 'グッドクリエイトについて',
+    aboutText: '株式会社グッドクリエイトは、2000年に香川で創業しました。個人情報をクラウドのデータベースではなく本人の端末に保持する特許技術「@POP（Personal Own Protocol）」を開発し、その上にセキュアな通信・本人認証・プラットフォームを構築しています。@POP は日本・米国・中国・韓国で特許を取得しています。',
+    press: '報道関係者の方へ', pressText: '取材・資料のご依頼は、お問い合わせフォームよりご連絡ください。', contact: 'お問い合わせ',
+    share: 'シェア', newer: '新しい記事', older: '前の記事', more: '詳しく見る',
+  },
+}[lang];
+
+const pageUrl = new URL(Astro.url.pathname, 'https://www.gc-c.co.jp').href;
+const enc = encodeURIComponent;
+const shares = [
+  { label: 'X', href: `https://twitter.com/intent/tweet?url=${enc(pageUrl)}&text=${enc(n.title)}` },
+  { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(pageUrl)}` },
+  { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(pageUrl)}` },
+];
+---
+<Base title={n.title} description={n.body}>
+  <PageHero crumbs={[{ label: T.news, href: '/news/' }, { label: n.tag }]} title={n.title}>
+    <div class="article-meta reveal"><time datetime={n.date}>{formatDate(n.date)}</time><span class="article-tag">{n.tag}</span></div>
+  </PageHero>
+
+  <article class="section article">
+    <div class="wrap article-grid">
+      <div class="article-main">
+        {m && (
+          <figure class="article-figure reveal">
+            <div class="media"><Picture src={m.src} alt={m.caption[lang]} formats={['avif', 'webp']} widths={[640, 1000, 1400]} sizes="(min-width: 1040px) 760px, 100vw" /></div>
+            <figcaption>{m.caption[lang]}</figcaption>
+          </figure>
+        )}
+        <p class="article-lead reveal">{n.body}</p>
+
+        {related.length > 0 && (
+          <section class="article-block reveal" aria-labelledby="rel-title">
+            <h2 id="rel-title" class="article-h">{T.related}</h2>
+            <ul class="article-related">
+              {related.map((s) => (
+                <li>
+                  <a href={L(`/solutions/${s.slug}/`)}>
+                    <span class="article-rel-cat">{s.category}</span>
+                    <strong>{s.name}</strong>
+                    <span>{s.tagline}</span>
+                    <Icon name="arrow" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <section class="article-block article-about reveal" aria-labelledby="about-title">
+          <h2 id="about-title" class="article-h">{T.about}</h2>
+          <p>{T.aboutText}</p>
+        </section>
+      </div>
+
+      <aside class="article-side">
+        <div class="article-card reveal">
+          <h2 class="article-h">{T.share}</h2>
+          <ul class="article-share">
+            {shares.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}<Icon name="external" /></a></li>)}
+          </ul>
+        </div>
+        <div class="article-card reveal">
+          <h2 class="article-h">{T.press}</h2>
+          <p>{T.pressText}</p>
+          <a class="link" href={L('/contact/')}>{T.contact} <Icon name="arrow" /></a>
+        </div>
+      </aside>
+    </div>
+
+    <div class="wrap">
+      <nav class="article-pager" aria-label={T.news}>
+        {older ? <a class="article-pager-prev" href={L(`/news/${older.slug}/`)}><small>← {T.older}</small><span>{older.title}</span></a> : <span></span>}
+        <a class="btn btn--outline" href={L('/news/')}>{T.back}</a>
+        {newer ? <a class="article-pager-next" href={L(`/news/${newer.slug}/`)}><small>{T.newer} →</small><span>{newer.title}</span></a> : <span></span>}
+      </nav>
+    </div>
+  </article>
+</Base>

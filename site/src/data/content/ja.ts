@@ -238,19 +238,25 @@ export const digitalServices: typeof En.digitalServices = [
 
 export const news: typeof En.news = [
   {
+    slug: '2025-06-16-halal-certification',
     date: '2025-06-16',
+    related: ['securitytalk', 'halal-sns'] as string[],
     tag: '認証取得',
     title: 'ICT分野における世界初のハラール認証を取得',
     body: 'SecurityTalk がイスラムの価値観に沿った情報保護技術として認められ、IT分野の製品として世界で初めてハラール認証を取得しました。',
   },
   {
+    slug: '2025-04-25-japan-resilience-award',
     date: '2025-04-25',
+    related: ['waravi', 'securitytalk'] as string[],
     tag: '受賞',
     title: '『第11回ジャパン・レジリエンス・アワード（強靭化大賞）2025』において準グランプリ・初代国土強靱化大臣賞を受賞しました',
     body: 'Waravi と SecurityTalk が、防災と強靭な社会インフラへの貢献を評価されました。',
   },
   {
+    slug: '2023-12-18-capital-alliance',
     date: '2023-12-18',
+    related: [] as string[],
     tag: 'コーポレート',
     title: '中西産業株式会社と資本業務提携を締結',
     body: '株式会社グッドクリエイトは、中西産業株式会社と資本業務提携を締結しました。',

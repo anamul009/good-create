@@ -1,0 +1,161 @@
+---
+// Trust Center. DRAFT: every statement reuses facts already on the site
+// (Technology, Privacy, _headers). Review with the security team before launch,
+// and switch the reporting contact to a monitored security mailbox.
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import LocalNav from '../components/LocalNav.astro';
+import { getContent } from '../data/site';
+import { getLang, localize } from '../i18n';
+
+const lang = getLang(Astro.url);
+const L = (href: string) => localize(lang, href);
+const { patents, recognition } = getContent(lang);
+
+const T = {
+  en: {
+    title: 'Security & trust',
+    desc: 'How Good Create protects information: privacy by design with @POP, independent recognition, patents, the security of this website and how to report a vulnerability.',
+    eyebrow: 'Trust Center',
+    h1: 'We protect information — starting with our own.',
+    lead: 'As a company that builds security technology, we believe our own practices should be open. This page explains how we approach protection, and how to reach us about security.',
+    secs: ['Our approach', 'Recognition', 'Patents', 'This website', 'Report a vulnerability'],
+    approachTitle: 'Privacy by design, not by policy alone.',
+    approachLead: 'The safest personal data is data that was never collected in one place. @POP is built on that principle.',
+    approach: [
+      ['device', 'Kept on the device', 'Personal information stays on each person’s own device, not in a cloud database.'],
+      ['eye-off', 'Not collected', 'Devices are enrolled without a name, e-mail address or phone number.'],
+      ['server', 'Nothing central to steal', 'The authentication server keeps only an encrypted ID that cannot be decrypted and a history code that changes every time.'],
+    ],
+    recTitle: 'Trusted where confidentiality matters most.',
+    patentsTitle: 'Protected by international patents.',
+    siteTitle: 'This website follows the same principle.',
+    site: [
+      'No advertising or tracking cookies, analytics scripts or third-party embeds.',
+      'A strict Content Security Policy: only this site’s own scripts, styles and fonts can run or load.',
+      'Encrypted connections only (HTTPS with HSTS); the site cannot be framed by other sites.',
+      'Personal information is collected only when you contact us, and only what you choose to provide.',
+    ],
+    privacyLink: 'Privacy policy',
+    reportTitle: 'Found a vulnerability? Please tell us.',
+    reportLead: 'We welcome reports from security researchers and customers. If you believe you have found a vulnerability in our products or this website, please contact us.',
+    steps: [
+      ['Contact us', 'Use the contact form and write “Security” in the subject or message.'],
+      ['Share the details', 'Describe the affected product or page, how to reproduce the issue and its possible impact.'],
+      ['Give us time to fix it', 'Please do not disclose the issue publicly until we have been able to investigate and respond.'],
+    ],
+    reportBtn: 'Report via contact form',
+    txt: 'security.txt',
+  },
+  ja: {
+    title: 'セキュリティへの取り組み',
+    desc: 'グッドクリエイトの情報保護への取り組み。@POPによるプライバシー・バイ・デザイン、第三者からの評価、特許、当ウェブサイトのセキュリティ、脆弱性のご報告について。',
+    eyebrow: 'Trust Center',
+    h1: '情報を守る会社として、まず自らを守る。',
+    lead: 'セキュリティ技術を提供する企業として、私たち自身の取り組みも公開すべきだと考えています。情報保護への考え方と、セキュリティに関するご連絡方法をご案内します。',
+    secs: ['基本の考え方', '第三者からの評価', '特許', '当サイトの対策', '脆弱性のご報告'],
+    approachTitle: 'ルールだけでなく、仕組みで守る。',
+    approachLead: 'もっとも安全な個人情報は、一か所に集めていない情報です。@POP はこの考え方から生まれました。',
+    approach: [
+      ['device', '端末に保持', '個人情報はクラウドのデータベースではなく、一人ひとりの端末にとどまります。'],
+      ['eye-off', '取得しない', '端末の登録に、氏名・メールアドレス・電話番号は必要ありません。'],
+      ['server', '中央に盗むものがない', '認証サーバーにあるのは、復号できない暗号化IDと、毎回変わる履歴コードだけです。'],
+    ],
+    recTitle: '機密性が求められる現場で、信頼されています。',
+    patentsTitle: '国際特許で保護された技術。',
+    siteTitle: 'このウェブサイトも、同じ考え方で。',
+    site: [
+      '広告・追跡目的のCookie、アクセス解析スクリプト、第三者の埋め込みコンテンツを使用していません。',
+      '厳格なコンテンツセキュリティポリシー（CSP）により、当サイト自身のスクリプト・スタイル・フォント以外は実行・読み込みできません。',
+      '通信は常に暗号化（HTTPS・HSTS）。他サイトへの埋め込み表示も禁止しています。',
+      '個人情報は、お問い合わせの際にお客様がご提供くださる情報のみを取得します。',
+    ],
+    privacyLink: 'プライバシーポリシー',
+    reportTitle: '脆弱性を見つけたら、お知らせください。',
+    reportLead: 'セキュリティ研究者やお客様からのご報告を歓迎します。当社製品または当サイトに脆弱性の可能性を見つけられた場合は、下記の方法でご連絡ください。',
+    steps: [
+      ['ご連絡', 'お問い合わせフォームから、件名または本文に「セキュリティ」とご記入のうえご連絡ください。'],
+      ['詳細の共有', '対象の製品・ページ、再現手順、想定される影響をお知らせください。'],
+      ['公開はお控えください', '調査と対応が完了するまで、内容の公開はお控えいただきますようお願いします。'],
+    ],
+    reportBtn: 'お問い合わせフォームで報告',
+    txt: 'security.txt',
+  },
+}[lang];
+
+const ids = ['approach', 'recognition', 'patents', 'website', 'report'];
+const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
+---
+<Base title={T.title} description={T.desc}>
+  <PageHero crumbs={[{ label: T.title }]} eyebrow={T.eyebrow} title={T.h1} lead={T.lead} />
+  <LocalNav items={secs} title="Trust Center" />
+
+  <section id="approach" class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>01</b>{T.secs[0]}</span>
+        <h2 class="h2 reveal">{T.approachTitle}</h2>
+        <p class="lead reveal">{T.approachLead}</p>
+      </div>
+      <div class="grid grid--3">
+        {T.approach.map(([ico, h, p]) => <div class="card reveal"><span class="ico"><Icon name={ico} /></span><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+      <p class="trust-more reveal"><a class="link" href={L('/technology/#how')}>{lang === 'ja' ? '@POP のしくみを見る' : 'See how @POP works'} <Icon name="arrow" /></a></p>
+    </div>
+  </section>
+
+  <section id="recognition" class="section section--dark">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>02</b>{T.secs[1]}</span>
+        <h2 class="h2 reveal">{T.recTitle}</h2>
+      </div>
+      <ul class="trust-rec">
+        {recognition.map((r) => <li class="reveal"><span class="yr">{r.year}</span><h3>{r.title}</h3><p>{r.body}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section id="patents" class="section">
+    <div class="wrap">
+      <div class="split split--even">
+        <div>
+          <span class="eyebrow reveal"><b>03</b>{T.secs[2]}</span>
+          <h2 class="h2 reveal">{T.patentsTitle}</h2>
+        </div>
+        <ul class="patent-list reveal">{patents.map((p) => <li><b>{p.code}</b><em>{p.region}</em><span>{p.number}</span></li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="website" class="section section--soft">
+    <div class="wrap">
+      <div class="split split--even">
+        <div>
+          <span class="eyebrow reveal"><b>04</b>{T.secs[3]}</span>
+          <h2 class="h2 reveal">{T.siteTitle}</h2>
+          <p class="reveal"><a class="link" href={L('/privacy/')}>{T.privacyLink} <Icon name="arrow" /></a></p>
+        </div>
+        <ul class="trust-checks reveal">{T.site.map((s) => <li><Icon name="check" /><span>{s}</span></li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="report" class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>05</b>{T.secs[4]}</span>
+        <h2 class="h2 reveal">{T.reportTitle}</h2>
+        <p class="lead reveal">{T.reportLead}</p>
+      </div>
+      <ol class="trust-steps">
+        {T.steps.map(([h, p], i) => <li class="reveal"><span>{String(i + 1).padStart(2, '0')}</span><h3>{h}</h3><p>{p}</p></li>)}
+      </ol>
+      <div class="btn-row reveal trust-actions">
+        <a class="btn btn--primary" href={L('/contact/')}>{T.reportBtn} <Icon name="arrow" /></a>
+        <a class="btn btn--outline" href="/.well-known/security.txt">{T.txt}</a>
+      </div>
+    </div>
+  </section>
+</Base>

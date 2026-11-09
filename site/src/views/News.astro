@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import { getContent, formatDate } from '../data/site';
 import { img } from '../data/images';
-import { getLang } from '../i18n';
+import { getLang, localize } from '../i18n';
 
 const lang = getLang(Astro.url);
 const { news } = getContent(lang);
@@ -19,11 +19,11 @@ const T = {
   <section class="section">
     <div class="wrap">
       {news.map((n, i) => (
-        <article class="news-row reveal">
+        <article class="news-row news-row--link reveal">
           <div class="media"><Picture src={images[i % images.length]} alt="" formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 800px) 320px, 100vw" /></div>
           <div>
             <div class="icard-meta"><time datetime={n.date}>{formatDate(n.date)}</time><span class="tag">{n.tag}</span></div>
-            <h2>{n.title}</h2>
+            <h2><a class="stretch" href={localize(lang, `/news/${n.slug}/`)}>{n.title}</a></h2>
             <p>{n.body}</p>
           </div>
         </article>

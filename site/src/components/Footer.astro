@@ -11,8 +11,8 @@ const L = (href: string) => localize(lang, href);
 const year = new Date().getFullYear();
 const groups = nav.filter((n) => n.children);
 const F = {
-  en: { cred: 'Patented in Japan, the US, China and Korea', company: 'Good Create Co., Ltd.' },
-  ja: { cred: '日本・米国・中国・韓国で特許取得', company: '株式会社グッドクリエイト' },
+  en: { cred: 'Patented in Japan, the US, China and Korea', company: 'Good Create Co., Ltd.', trust: 'Security & trust' },
+  ja: { cred: '日本・米国・中国・韓国で特許取得', company: '株式会社グッドクリエイト', trust: 'セキュリティへの取り組み' },
 }[lang];
 const jaHref = lang === 'ja' ? null : pathFor(Astro.url, 'ja');
 const enHref = lang === 'en' ? null : pathFor(Astro.url, 'en');
@@ -44,6 +44,7 @@ const enHref = lang === 'en' ? null : pathFor(Astro.url, 'en');
           <li><a href={L('/news/')}>{T.news}</a></li>
           <li><a href={L('/contact/')}>{T.contactShort}</a></li>
           <li><a href={L('/privacy/')}>{T.privacy}</a></li>
+          <li><a href={L('/trust/')}>{F.trust}</a></li>
           <li><a href="https://securitytalk.jp/" target="_blank" rel="noopener noreferrer">{T.stSite}</a></li>
         </ul>
       </div>
@@ -67,7 +68,7 @@ const enHref = lang === 'en' ? null : pathFor(Astro.url, 'en');
       </p>
       <nav aria-label={T.legal}>
         <a href={L('/privacy/')}>{T.privacy}</a>
-        <a href="/.well-known/security.txt">{T.security}</a>
+        <a href={L('/trust/')}>{T.security}</a>
         <a href="#main" class="to-top">{T.toTop} <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 7.5 6 4.5 9 7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></a>
       </nav>
     </div>

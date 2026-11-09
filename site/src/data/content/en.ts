@@ -348,19 +348,25 @@ export const digitalServices = [
 
 export const news = [
   {
+    slug: '2025-06-16-halal-certification',
     date: '2025-06-16',
+    related: ['securitytalk', 'halal-sns'] as string[],
     tag: 'Certification',
     title: 'SecurityTalk receives the world’s first halal certification in ICT',
     body: 'SecurityTalk has been recognized as an information protection technology aligned with Islamic values, becoming the first product in the IT field to be halal certified.',
   },
   {
+    slug: '2025-04-25-japan-resilience-award',
     date: '2025-04-25',
+    related: ['waravi', 'securitytalk'] as string[],
     tag: 'Award',
     title: 'Runner-up Grand Prize and inaugural Minister for National Resilience Award at the 11th Japan Resilience Award 2025',
     body: 'Waravi and SecurityTalk were recognized for their contribution to disaster preparedness and resilient social infrastructure.',
   },
   {
+    slug: '2023-12-18-capital-alliance',
     date: '2023-12-18',
+    related: [] as string[],
     tag: 'Corporate',
     title: 'Capital and business alliance with Nakanishi Sangyo Co., Ltd.',
     body: 'Good Create has entered into a capital and business alliance with Nakanishi Sangyo Co., Ltd.',

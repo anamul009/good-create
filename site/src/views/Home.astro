@@ -228,7 +228,7 @@ const eco: EcoItem[] = [
     </div>
     <div class="hero-news">
       <div class="wrap">
-        <a class="hero-news-link" href={L('/news/')}>
+        <a class="hero-news-link" href={L(`/news/${latest.slug}/`)}>
           <span class="hero-news-label">{T.news}</span>
           <time datetime={latest.date}>{formatDate(latest.date)}</time>
           <span class="hero-news-title">{latest.title}</span>
@@ -239,15 +239,14 @@ const eco: EcoItem[] = [
   </section>
 
   <!-- ═══ 01 About ═══ -->
-  <section class="section" aria-labelledby="about-title">
+  <section class="section about2" aria-labelledby="about-title">
     <div class="wrap">
-      <div class="about-grid">
-        <div class="about-media reveal">
-          <div class="media"><Picture src={img.crowdCity} alt={T.aboutImgAlt} formats={['avif', 'webp']} widths={[480, 800, 1100]} sizes="(min-width: 960px) 45vw, 100vw" /></div>
-        </div>
-        <div class="about-body">
+      <div class="about2-head">
+        <div>
           <span class="eyebrow reveal"><b>01</b>{T.aboutEyebrow}</span>
-          <h2 id="about-title" class="h2 reveal">{T.aboutTitle}</h2>
+          <h2 id="about-title" class="about2-title reveal">{T.aboutTitle}</h2>
+        </div>
+        <div class="about2-body">
           <p class="lead reveal">{T.aboutLead}</p>
           <div class="btn-row reveal">
             <a class="btn btn--dark" href={L('/company/')}>{T.companyInfo} <Icon name="arrow" /></a>
@@ -255,9 +254,14 @@ const eco: EcoItem[] = [
           </div>
         </div>
       </div>
-      <dl class="figures reveal">
-        {T.figures.map((f) => <div><dt>{f.dt}</dt><dd>{f.dd}{f.small && <small>{f.small}</small>}</dd><span>{f.note}</span></div>)}
-      </dl>
+      <div class="about2-band">
+        <div class="about2-photo reveal">
+          <div class="media"><Picture src={img.crowdCity} alt={T.aboutImgAlt} formats={['avif', 'webp']} widths={[640, 1100, 1600, 2000]} sizes="(min-width: 1360px) 1300px, 100vw" /></div>
+        </div>
+        <dl class="about2-figs reveal">
+          {T.figures.map((f) => <div><dt>{f.dt}</dt><dd>{f.dd}{f.small && <small>{f.small}</small>}</dd><span>{f.note}</span></div>)}
+        </dl>
+      </div>
     </div>
   </section>
 
@@ -422,7 +426,7 @@ const eco: EcoItem[] = [
         <ul class="news-list reveal">
           {news.map((n) => (
             <li>
-              <a href={L('/news/')}>
+              <a href={L(`/news/${n.slug}/`)}>
                 <time datetime={n.date}>{formatDate(n.date)}</time>
                 <span class="news-tag">{n.tag}</span>
                 <span class="news-title">{n.title}</span>
