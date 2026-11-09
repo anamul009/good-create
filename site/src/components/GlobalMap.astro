@@ -1,0 +1,41 @@
+---
+// Dotted map, Europe to Japan: arcs from Japan to each partner country.
+// Land dots come from src/data/world-dots.ts (static path, no runtime data).
+// CSP-safe: presentation attributes + classes; arcs draw in when the wrapper gets .is-in.
+import { worldDots as W } from '../data/world-dots';
+
+interface Place { name: string; lat: number; lon: number; label: { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' } }
+interface Props { label: string; home: Place; partners: Place[] }
+const { label, home, partners } = Astro.props;
+
+const px = (p: { lat: number; lon: number }) => ({ x: (p.lon - W.lon0) * W.k, y: (W.lat0 - p.lat) * W.k });
+const h = px(home);
+const arcs = partners.map((p) => {
+  const e = px(p);
+  const mx = (h.x + e.x) / 2, my = (h.y + e.y) / 2;
+  const dist = Math.hypot(e.x - h.x, e.y - h.y);
+  const lift = Math.min(dist * 0.28, 240);
+  return { d: `M${h.x.toFixed(0)} ${h.y.toFixed(0)}Q${mx.toFixed(0)} ${(my - lift).toFixed(0)} ${e.x.toFixed(0)} ${e.y.toFixed(0)}`, ...e, p };
+});
+---
+<svg class="gmap-svg" viewBox={`0 0 ${W.w} ${W.h}`} role="img" aria-label={label} xmlns="http://www.w3.org/2000/svg">
+  <path d={W.d} stroke="#1a3463" stroke-opacity=".22" stroke-width="7" stroke-linecap="round" fill="none" />
+
+  <g fill="none" stroke="#e0007f" stroke-width="3" stroke-linecap="round">
+    {arcs.map((a, i) => <path class={`gm-arc gm-arc--${i}`} d={a.d} pathLength="1" />)}
+  </g>
+
+  {arcs.map((a, i) => (
+    <g class={`gm-pin gm-pin--${i}`}>
+      <circle cx={a.x.toFixed(0)} cy={a.y.toFixed(0)} r="16" fill="#e0007f" fill-opacity=".14" />
+      <circle cx={a.x.toFixed(0)} cy={a.y.toFixed(0)} r="8" fill="#e0007f" stroke="#ffffff" stroke-width="3" />
+      <text x={(a.x + a.p.label.dx).toFixed(0)} y={(a.y + a.p.label.dy).toFixed(0)} text-anchor={a.p.label.anchor} class="gm-label">{a.p.name}</text>
+    </g>
+  ))}
+
+  <g class="gm-home">
+    <circle class="gm-pulse" cx={h.x.toFixed(0)} cy={h.y.toFixed(0)} r="30" fill="#e0007f" fill-opacity=".18" />
+    <circle cx={h.x.toFixed(0)} cy={h.y.toFixed(0)} r="13" fill="#0a1730" stroke="#e0007f" stroke-width="5" />
+    <text x={(h.x + home.label.dx).toFixed(0)} y={(h.y + home.label.dy).toFixed(0)} text-anchor={home.label.anchor} class="gm-label gm-label--home">{home.name}</text>
+  </g>
+</svg>

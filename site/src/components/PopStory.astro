@@ -1,0 +1,213 @@
+---
+// "How @POP works" scroll story. A sticky SVG stage changes as each text step
+// scrolls into view (site.js sets data-step on the stage). CSP-safe: SVG
+// presentation attributes + classes only; every claim comes from the
+// Technology page copy.
+import { getLang } from '../i18n';
+
+interface Props { eyebrow: string; num: string }
+const { eyebrow, num } = Astro.props;
+const lang = getLang(Astro.url);
+
+const T = {
+  en: {
+    title: 'From one big target to nothing worth stealing.',
+    alt: 'Animated diagram: personal data moves from a central server back onto each person’s device, and devices connect directly with encryption.',
+    old: 'Conventional',
+    pop: '@POP',
+    steps: [
+      ['Data piles up in one place.', 'Most services collect names, addresses, IDs and activity history on a central server. Convenient — and a single target.'],
+      ['One breach exposes everyone.', 'If that server is breached, every record on it can leak at once. The more a service collects, the more there is to lose.'],
+      ['With @POP, data stays on each device.', 'There is no cloud database of personal information. Each person’s data stays on their own device, and only what is needed is shared, when it is needed.'],
+      ['Nothing on the server worth stealing.', 'The authentication server keeps only an encrypted ID that cannot be decrypted and a history code that changes every time. A copied key fails — the history exists only on the real device.'],
+      ['Devices connect directly, encrypted.', 'Communication runs encrypted and peer-to-peer between devices, so nothing piles up in the center — and delivering information costs almost nothing.'],
+    ],
+  },
+  ja: {
+    title: '狙われる一か所から、盗むもののない仕組みへ。',
+    alt: '個人情報が中央のサーバーから本人の端末へ戻り、端末同士が暗号化して直接つながる様子を示したアニメーション図',
+    old: '従来型',
+    pop: '@POP',
+    steps: [
+      ['個人情報は、一か所に集まっていく。', '多くのサービスは、氏名・住所・ID・利用履歴を中央のサーバーに集めています。便利な反面、狙われる標的にもなります。'],
+      ['一度の侵害で、すべてが流出する。', 'そのサーバーが侵害されれば、保存された情報がまとめて流出するおそれがあります。集めるほど、失うものも大きくなります。'],
+      ['@POP なら、情報は本人の端末に。', '個人情報のクラウドデータベースは不要。情報は一人ひとりの端末にとどまり、必要なときに、必要なものだけを共有します。'],
+      ['サーバーに、盗む価値のあるものはない。', '認証サーバーにあるのは、復号できない暗号化IDと、毎回変わる履歴コードだけ。キーを複製しても、履歴は本物の端末にしかないため認証できません。'],
+      ['端末同士が、暗号化して直接つながる。', '通信は端末間の暗号化P2P。中央に情報をためることなく、情報配信のコストもほぼゼロに抑えます。'],
+    ],
+  },
+}[lang];
+
+// stage geometry (viewBox 600 x 600)
+const server = { x: 300, y: 150 };
+const phones = [
+  { x: 105, y: 430 },
+  { x: 235, y: 492 },
+  { x: 365, y: 492 },
+  { x: 495, y: 430 },
+];
+const p2p: [number, number][] = [[0, 1], [1, 2], [2, 3], [0, 2], [1, 3], [0, 3]];
+// person records inside the central server, and where each one flies to in a breach
+const records = [
+  { x: 262, y: 138 }, { x: 300, y: 138 }, { x: 338, y: 138 },
+  { x: 262, y: 176 }, { x: 300, y: 176 }, { x: 338, y: 176 },
+];
+---
+<section id="how" class="section section--soft pstory" data-story>
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow reveal"><b>{num}</b>{eyebrow}</span>
+      <h2 class="h2 reveal">{T.title}</h2>
+    </div>
+
+    <div class="ps-grid">
+      <div class="ps-stage" data-story-stage data-step="1">
+        <div class="ps-tags" aria-hidden="true">
+          <span class="ps-tag ps-t v1 v2">{T.old}</span>
+          <span class="ps-tag ps-tag--pop ps-t v3 v4 v5">{T.pop}</span>
+        </div>
+
+        <svg class="ps-svg" viewBox="0 0 600 600" role="img" aria-label={T.alt} xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="ps-bg" cx="50%" cy="42%" r="72%">
+              <stop offset="0" stop-color="#ffffff" />
+              <stop offset="1" stop-color="#e4ebf7" />
+            </radialGradient>
+            <linearGradient id="ps-brand" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e0007f" />
+              <stop offset="1" stop-color="#b80068" />
+            </linearGradient>
+            <radialGradient id="ps-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stop-color="#e0007f" stop-opacity=".16" />
+              <stop offset="1" stop-color="#ff3d9a" stop-opacity="0" />
+            </radialGradient>
+            <pattern id="ps-dots" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.2" fill="#0a1730" fill-opacity=".07" />
+            </pattern>
+          </defs>
+
+          <rect width="600" height="600" rx="22" fill="url(#ps-bg)" />
+          <rect width="600" height="600" rx="22" fill="url(#ps-dots)" />
+
+          <!-- phone glows: data lives here (@POP) -->
+          <g class="ps-t v3 v4 v5">
+            {phones.map((p) => <circle cx={p.x} cy={p.y} r="70" fill="url(#ps-glow)" />)}
+          </g>
+
+          <!-- central links: every phone uploads to the server -->
+          <g class="ps-t v1 v2" stroke="#1a3463" stroke-opacity=".28" stroke-width="1.5">
+            {phones.map((p) => <line x1={p.x} y1={p.y - 50} x2={server.x} y2={server.y + 66} />)}
+          </g>
+          <!-- data flowing up into the server -->
+          <g class="ps-t v1 ps-flow" stroke="#e0007f" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 16">
+            {phones.map((p) => <line x1={p.x} y1={p.y - 50} x2={server.x} y2={server.y + 66} />)}
+          </g>
+
+          <!-- auth only: thin dashed ID lines (@POP) -->
+          <g class="ps-t v4" stroke="#1a3463" stroke-opacity=".35" stroke-width="1.2" stroke-dasharray="3 7">
+            {phones.map((p) => <line x1={p.x} y1={p.y - 50} x2={server.x} y2={server.y + 40} />)}
+          </g>
+
+          <!-- peer-to-peer encrypted links (@POP) -->
+          <g class="ps-t v5" stroke="url(#ps-brand)" stroke-width="2.2" stroke-linecap="round">
+            {p2p.map(([a, b]) => <line x1={phones[a].x} y1={phones[a].y} x2={phones[b].x} y2={phones[b].y} stroke-opacity=".55" />)}
+          </g>
+          <g class="ps-t v5 ps-flow ps-flow--p2p" stroke="#1a3463" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1 22">
+            {p2p.map(([a, b]) => <line x1={phones[a].x} y1={phones[a].y} x2={phones[b].x} y2={phones[b].y} />)}
+          </g>
+
+          <!-- central server -->
+          <g class="ps-server">
+            <g class="ps-server-body">
+              <path d={`M${server.x - 75} ${server.y - 50} v116 a75 20 0 0 0 150 0 v-116`} fill="#ffffff" stroke="#1a3463" stroke-opacity=".55" stroke-width="2" />
+              <ellipse cx={server.x} cy={server.y - 50} rx="75" ry="20" fill="#eef3fb" stroke="#1a3463" stroke-opacity=".55" stroke-width="2" />
+              <path d={`M${server.x - 75} ${server.y + 8} a75 20 0 0 0 150 0`} fill="none" stroke="#1a3463" stroke-opacity=".22" stroke-width="2" />
+            </g>
+            <!-- crack (breach) -->
+            <path class="ps-t v2" d={`M${server.x + 10} ${server.y - 68} l-14 34 l18 14 l-16 32 l14 16 l-10 40`} fill="none" stroke="#e0007f" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" />
+            <!-- encrypted ID only (@POP) -->
+            <g class="ps-t v3 v4 v5">
+              <rect x={server.x - 22} y={server.y - 4} width="44" height="34" rx="7" fill="url(#ps-brand)" />
+              <path d={`M${server.x - 13} ${server.y - 4} v-9 a13 13 0 0 1 26 0 v9`} fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+              <circle cx={server.x} cy={server.y + 10} r="4" fill="#ffffff" />
+              <g fill="#1a3463" fill-opacity=".75">
+                {[-30, -18, -6, 6, 18, 30].map((dx) => <circle cx={server.x + dx} cy={server.y + 48} r="3.2" />)}
+              </g>
+            </g>
+          </g>
+
+          <!-- person records: stored centrally (1), then leaking (2) -->
+          {records.map((r, i) => (
+            <g class={`ps-t v1 v2 ps-rec ps-rec--${i}`}>
+              <rect x={r.x - 15} y={r.y - 11} width="30" height="22" rx="4" fill="#e8f0fd" stroke="#1a3463" stroke-opacity=".5" />
+              <circle cx={r.x - 6} cy={r.y - 2} r="4" fill="#1a3463" fill-opacity=".85" />
+              <path d={`M${r.x - 12} ${r.y + 8} a6 5 0 0 1 12 0`} fill="#1a3463" fill-opacity=".85" />
+              <rect x={r.x + 2} y={r.y - 4} width="9" height="2.5" rx="1" fill="#1a3463" fill-opacity=".6" />
+              <rect x={r.x + 2} y={r.y + 2} width="7" height="2.5" rx="1" fill="#1a3463" fill-opacity=".4" />
+            </g>
+          ))}
+
+          <!-- attacker -->
+          <g class="ps-t v2 v4">
+            <g transform="translate(528 86)">
+              <circle r="30" fill="#fde6f2" stroke="#e0007f" stroke-width="2" />
+              <path d="M-14 16 a14 13 0 0 1 28 0" fill="#e0007f" />
+              <path d="M-12 -2 a12 13 0 0 1 24 0 v2 a12 12 0 0 1 -24 0z" fill="#e0007f" />
+              <rect x="-8" y="-4" width="16" height="5" rx="2.5" fill="#fde6f2" />
+            </g>
+          </g>
+          <line class="ps-t v2 ps-flow ps-flow--attack" x1="500" y1="98" x2={server.x + 80} y2={server.y - 30} stroke="#e0007f" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8" />
+          <!-- attack fails (@POP) -->
+          <g class="ps-t v4">
+            <line x1="500" y1="98" x2="420" y2="122" stroke="#e0007f" stroke-opacity=".6" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 8" />
+            <g transform="translate(408 126)">
+              <circle r="15" fill="#ffffff" stroke="#e0007f" stroke-width="2" />
+              <path d="M-6 -6 L6 6 M6 -6 L-6 6" stroke="#e0007f" stroke-width="3" stroke-linecap="round" />
+            </g>
+          </g>
+
+          <!-- copied key on a cloned device: rejected (@POP) -->
+          <g class="ps-t v4" transform="translate(540 300)">
+            <rect x="-22" y="-38" width="44" height="76" rx="9" fill="none" stroke="#1a3463" stroke-opacity=".55" stroke-width="2" stroke-dasharray="5 5" />
+            <circle cx="0" cy="0" r="15" fill="#ffffff" stroke="#e0007f" stroke-width="2" />
+            <path d="M-6 -6 L6 6 M6 -6 L-6 6" stroke="#e0007f" stroke-width="3" stroke-linecap="round" />
+          </g>
+
+          <!-- phones -->
+          {phones.map((p) => (
+            <g transform={`translate(${p.x} ${p.y})`}>
+              <rect x="-26" y="-46" width="52" height="92" rx="11" fill="#ffffff" stroke="#1a3463" stroke-opacity=".8" stroke-width="2.2" />
+              <rect x="-20" y="-37" width="40" height="70" rx="6" fill="#eef3fb" />
+              <line x1="-5" y1="39" x2="5" y2="39" stroke="#1a3463" stroke-opacity=".6" stroke-width="2" stroke-linecap="round" />
+              <!-- own data card on the device (@POP) -->
+              <g class="ps-t v3 v4 v5">
+                <rect x="-14" y="-28" width="28" height="20" rx="3.5" fill="#e8f0fd" stroke="#1a3463" stroke-opacity=".5" />
+                <circle cx="-6" cy="-20" r="3.5" fill="#1a3463" fill-opacity=".85" />
+                <path d="M-11 -11 a5 4.5 0 0 1 10 0" fill="#1a3463" fill-opacity=".85" />
+                <rect x="1" y="-22" width="8" height="2.2" rx="1" fill="#1a3463" fill-opacity=".6" />
+                <rect x="1" y="-17" width="6" height="2.2" rx="1" fill="#1a3463" fill-opacity=".4" />
+                <rect x="-11" y="2" width="22" height="18" rx="4" fill="url(#ps-brand)" />
+                <path d="M-6 2 v-5 a6 6 0 0 1 12 0 v5" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" />
+                <circle cx="0" cy="11" r="2.4" fill="#ffffff" />
+              </g>
+            </g>
+          ))}
+        </svg>
+
+        <ol class="ps-dots" aria-hidden="true">
+          {T.steps.map((_, i) => <li class={`ps-dot ps-dot--${i + 1}`}></li>)}
+        </ol>
+      </div>
+
+      <ol class="ps-steps" data-story-steps>
+        {T.steps.map(([h, p], i) => (
+          <li class="ps-step" data-story-step={String(i + 1)}>
+            <span class="ps-num">{String(i + 1).padStart(2, '0')}<em>{i < 2 ? T.old : T.pop}</em></span>
+            <h3>{h}</h3>
+            <p>{p}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>

@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro';
 import Cta from '../components/Cta.astro';
 import PopMesh from '../components/PopMesh.astro';
 import DeviceArt from '../components/DeviceArt.astro';
+import GlobalMap from '../components/GlobalMap.astro';
 import heroPoster from '../assets/img/hero-poster.jpg';
 import { getContent, formatDate } from '../data/site';
 import { img, solutionMedia, creator } from '../data/images';
@@ -124,6 +125,55 @@ const T = {
     newsAll: 'ニュース一覧',
   },
 }[lang];
+
+
+// Global presence + President's message (copy reuses facts already on the site)
+const G = {
+  en: {
+    globalEyebrow: 'Global',
+    globalTitle: 'From Japan to the world.',
+    globalLead: 'Developed in Kagawa, our platforms are expanding overseas through MOUs and joint ventures with partners in seven countries.',
+    mapAlt: 'Map: lines connect Japan to partner countries — Poland, Uzbekistan, Pakistan, Saudi Arabia, the UAE, Bangladesh and Indonesia.',
+    homeLabel: 'Japan (HQ)',
+    homeNote: 'Head office in Kagawa, office in Tokyo',
+    partnersLabel: 'MOU & joint-venture partners',
+    names: ['Poland', 'Uzbekistan', 'Pakistan', 'Saudi Arabia', 'UAE', 'Bangladesh', 'Indonesia'],
+    msgEyebrow: 'Message',
+    quote: '“Value every connection between people. Everything we do is for our customers.”',
+    excerpt: 'Our first mission is to deliver what our customers need — quickly. Built on the connections we have made and teamwork second to none, we promise to keep evolving for our customers.',
+    role: 'Representative Director & President',
+    name: 'Masahiro Yamamoto',
+    readMore: 'Read the full message',
+  },
+  ja: {
+    globalEyebrow: 'Global',
+    globalTitle: '日本から、世界へ。',
+    globalLead: '香川で生まれた技術とプラットフォームを、7か国のパートナーとのMOU・合弁事業を通じて海外へ展開しています。',
+    mapAlt: '地図：日本からポーランド、ウズベキスタン、パキスタン、サウジアラビア、UAE、バングラデシュ、インドネシアのパートナー国へ線がつながっている',
+    homeLabel: '日本（本社）',
+    homeNote: '香川本社・東京本社',
+    partnersLabel: 'MOU・合弁のパートナー国',
+    names: ['ポーランド', 'ウズベキスタン', 'パキスタン', 'サウジアラビア', 'UAE', 'バングラデシュ', 'インドネシア'],
+    msgEyebrow: 'Message',
+    quote: '人と人のつながりを大切に。すべてはお客様のために。',
+    excerpt: 'お客様のニーズにあったものをいち早くご提供することが、我々の一番のミッションです。今までに出会った人と人とのつながりと、どこにも負けないチームワークを財産に、これからもお客様のために進化し続けることを約束します。',
+    role: '代表取締役社長',
+    name: '山本 真大',
+    readMore: '代表挨拶を読む',
+  },
+}[lang];
+type Lbl = { dx: number; dy: number; anchor: 'start' | 'middle' | 'end' };
+const coords: [number, number, Lbl][] = [
+  [52.2, 21.0, { dx: 0, dy: -30, anchor: 'middle' }],   // Warsaw
+  [41.3, 69.2, { dx: 0, dy: -30, anchor: 'middle' }],   // Tashkent
+  [33.7, 73.1, { dx: 24, dy: 10, anchor: 'start' }],    // Islamabad
+  [24.7, 46.7, { dx: -24, dy: 10, anchor: 'end' }],     // Riyadh
+  [24.5, 54.4, { dx: 0, dy: 46, anchor: 'middle' }],    // Abu Dhabi
+  [23.8, 90.4, { dx: 0, dy: 46, anchor: 'middle' }],    // Dhaka
+  [-6.2, 106.8, { dx: 24, dy: 10, anchor: 'start' }],   // Jakarta
+];
+const partners = coords.map(([lat, lon, label], i) => ({ name: G.names[i], lat, lon, label }));
+const home = { name: G.homeLabel, lat: 34.3, lon: 134.0, label: { dx: 0, dy: 64, anchor: 'middle' as const } };
 
 const poster = await getImage({ src: heroPoster, format: 'webp', width: 1280 });
 const latest = news[0];
@@ -308,7 +358,23 @@ const eco: EcoItem[] = [
     </div>
   </section>
 
-  <!-- ═══ 05 Recognition ═══ -->
+  <!-- ═══ 05 Global ═══ -->
+  <section class="section gmap" aria-labelledby="global-title">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow reveal"><b>05</b>{G.globalEyebrow}</span>
+        <h2 id="global-title" class="h2 reveal">{G.globalTitle}</h2>
+        <p class="lead reveal">{G.globalLead}</p>
+      </div>
+      <div class="gmap-media reveal"><GlobalMap label={G.mapAlt} home={home} partners={partners} /></div>
+      <div class="gmap-legend reveal">
+        <div><span class="gmap-dot gmap-dot--home"></span><div><strong>{G.homeLabel}</strong><small>{G.homeNote}</small></div></div>
+        <div><span class="gmap-dot"></span><div><strong>{G.partnersLabel}</strong><ul>{G.names.map((n) => <li>{n}</li>)}</ul></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 06 Recognition ═══ -->
   <section class="section section--dark" aria-labelledby="rec-title">
     <div class="wrap">
       <div class="recog-grid">
@@ -319,7 +385,7 @@ const eco: EcoItem[] = [
           <p class="media-caption">{T.recCaption}</p>
         </div>
         <div>
-          <span class="eyebrow reveal"><b>05</b>{T.recEyebrow}</span>
+          <span class="eyebrow reveal"><b>06</b>{T.recEyebrow}</span>
           <h2 id="rec-title" class="h2 reveal recog-title">{T.recTitle}</h2>
           <ul class="recog-list reveal">
             {recognition.map((r) => <li><span class="yr">{r.year}</span><h3>{r.title}</h3><p>{r.body}</p></li>)}
@@ -329,12 +395,27 @@ const eco: EcoItem[] = [
     </div>
   </section>
 
-  <!-- ═══ 06 News ═══ -->
+  <!-- ═══ 07 Message ═══ -->
+  <section class="section section--soft msg-strip" aria-labelledby="msg-title">
+    <div class="wrap msg-strip-grid">
+      <span class="eyebrow reveal"><b>07</b>{G.msgEyebrow}</span>
+      <div>
+        <h2 id="msg-title" class="msg-quote reveal">{G.quote}</h2>
+        <p class="msg-excerpt reveal">{G.excerpt}</p>
+        <div class="msg-foot reveal">
+          <p class="msg-sign"><small>{G.role}</small>{G.name}</p>
+          <a class="link" href={L('/company/#message')}>{G.readMore} <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 08 News ═══ -->
   <section class="section" aria-labelledby="news-title">
     <div class="wrap">
       <div class="news-grid">
         <div class="head">
-          <span class="eyebrow reveal"><b>06</b>{T.news}</span>
+          <span class="eyebrow reveal"><b>08</b>{T.news}</span>
           <h2 id="news-title" class="h2 reveal">{T.newsTitle}</h2>
           <a class="btn btn--outline reveal news-all" href={L('/news/')}>{T.newsAll} <Icon name="arrow" /></a>
         </div>

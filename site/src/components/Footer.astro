@@ -3,13 +3,19 @@ import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { getContent } from '../data/site';
 import { logos } from '../data/images';
-import { getLang, t, localize } from '../i18n';
+import { getLang, t, localize, pathFor } from '../i18n';
 const lang = getLang(Astro.url);
 const T = t(lang);
 const { company, nav } = getContent(lang);
 const L = (href: string) => localize(lang, href);
 const year = new Date().getFullYear();
 const groups = nav.filter((n) => n.children);
+const F = {
+  en: { cred: 'Patented in Japan, the US, China and Korea', company: 'Good Create Co., Ltd.' },
+  ja: { cred: '日本・米国・中国・韓国で特許取得', company: '株式会社グッドクリエイト' },
+}[lang];
+const jaHref = lang === 'ja' ? null : pathFor(Astro.url, 'ja');
+const enHref = lang === 'en' ? null : pathFor(Astro.url, 'en');
 ---
 <footer class="site-footer">
   <div class="wrap">
@@ -17,6 +23,7 @@ const groups = nav.filter((n) => n.children);
       <div>
         <a href={L('/')} aria-label={T.homeAria}><Image src={logos.gcWhite} alt={T.siteName} height={64} class="footer-logo" /></a>
         <p>{T.tagline}</p>
+        <p class="footer-cred"><Icon name="shield" />{F.cred}<span>PCT/JP2020/035327</span></p>
       </div>
       <div class="btn-row">
         <a class="btn btn--primary" href={L('/contact/')}>{T.contact} <Icon name="arrow" /></a>
@@ -53,7 +60,11 @@ const groups = nav.filter((n) => n.children);
     </div>
 
     <div class="footer-bottom">
-      <span>© {year} Good Create Co., Ltd. {T.rights}</span>
+      <span>© {year} {F.company} {T.rights}</span>
+      <p class="footer-lang">
+        {jaHref ? <a href={jaHref} hreflang="ja" lang="ja">日本語</a> : <span aria-current="true">日本語</span>}
+        {enHref ? <a href={enHref} hreflang="en" lang="en">English</a> : <span aria-current="true">English</span>}
+      </p>
       <nav aria-label={T.legal}>
         <a href={L('/privacy/')}>{T.privacy}</a>
         <a href="/.well-known/security.txt">{T.security}</a>

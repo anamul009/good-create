@@ -6,6 +6,7 @@ import Icon from '../components/Icon.astro';
 import Cta from '../components/Cta.astro';
 import HeroArt from '../components/HeroArt.astro';
 import LocalNav from '../components/LocalNav.astro';
+import PopStory from '../components/PopStory.astro';
 import { getContent } from '../data/site';
 import { img, solutionMedia } from '../data/images';
 import { getLang, localize } from '../i18n';
@@ -23,7 +24,7 @@ const T = {
     h1: 'Your information, kept where it belongs — with you.',
     lead: 'Personal Own Protocol is a patented approach to identity, data and communication. Keep data on the device. Share only what is needed, when it is needed.',
     chip: 'Patented in JP · US · CN · KR',
-    secs: ['The problem', 'A different model', 'The idea', 'Authentication', 'Patents', 'Applications'],
+    secs: ['The problem', 'How it works', 'A different model', 'The idea', 'Authentication', 'Patents', 'Applications'],
     problemAlt: 'A woman with a smartphone surrounded by icons representing her personal data',
     problemTitle: 'We hand more and more of ourselves to the cloud.',
     problemP1: 'Names, addresses, phone numbers, IDs, activity history. The more convenient digital life becomes, the more personal information collects on central servers — and the more there is to lose in a single breach.',
@@ -62,7 +63,7 @@ const T = {
     h1: '自分の情報は、自分の手元に。',
     lead: 'Personal Own Protocol は、本人確認・データ・通信のための特許技術です。情報は端末に置き、必要なときに、必要なものだけを共有します。',
     chip: '日本・米国・中国・韓国で特許取得',
-    secs: ['課題', '新しいモデル', '発想', '認証のしくみ', '特許', '活用例'],
+    secs: ['課題', 'しくみ', '新しいモデル', '発想', '認証のしくみ', '特許', '活用例'],
     problemAlt: '個人データを表すアイコンに囲まれ、スマートフォンを持つ女性',
     problemTitle: '私たちは、たくさんの情報をデジタルに預けている。',
     problemP1: '氏名、住所、電話番号、ID、利用履歴。デジタルが便利になるほど、個人情報は中央のサーバーに集まり、一度の漏えいで失われるものも大きくなります。',
@@ -95,7 +96,7 @@ const T = {
   },
 }[lang];
 
-const ids = ['problem', 'model', 'idea', 'authentication', 'patents', 'applications'];
+const ids = ['problem', 'how', 'model', 'idea', 'authentication', 'patents', 'applications'];
 const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
 ---
 <Base title={T.title} description={T.desc}>
@@ -124,10 +125,12 @@ const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
     </div>
   </section>
 
-  <section id="model" class="section section--soft">
+  <PopStory num="02" eyebrow={T.secs[1]} />
+
+  <section id="model" class="section">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow reveal"><b>02</b>{T.secs[1]}</span>
+        <span class="eyebrow reveal"><b>03</b>{T.secs[2]}</span>
         <h2 class="h2 reveal">{T.compareTitle}</h2>
       </div>
       <div class="compare">
@@ -149,7 +152,7 @@ const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
     <div class="wrap">
       <div class="split split--center split--rev">
         <div>
-          <span class="eyebrow reveal"><b>03</b>{T.secs[2]}</span>
+          <span class="eyebrow reveal"><b>04</b>{T.secs[3]}</span>
           <h2 class="h2 reveal">{T.ideaTitle}</h2>
           <p class="lead reveal">{T.ideaLead}</p>
           <ul class="ticks reveal">
@@ -166,7 +169,7 @@ const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
   <section id="authentication" class="section section--dark">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow reveal"><b>04</b>{T.secs[3]}</span>
+        <span class="eyebrow reveal"><b>05</b>{T.secs[4]}</span>
         <h2 class="h2 reveal">{T.authTitle}</h2>
         <p class="lead reveal">{T.authLead}</p>
       </div>
@@ -183,12 +186,12 @@ const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
     <div class="wrap">
       <div class="split split--even">
         <div>
-          <span class="eyebrow reveal"><b>05</b>{T.secs[4]}</span>
+          <span class="eyebrow reveal"><b>06</b>{T.secs[5]}</span>
           <h2 class="h2 reveal">{T.patentsTitle}</h2>
           <ul class="patent-list reveal">{patents.map((p) => <li><b>{p.code}</b><em>{p.region}</em><span>{p.number}</span></li>)}</ul>
         </div>
         <div>
-          <span class="eyebrow reveal"><b>05</b>{T.edgeEyebrow}</span>
+          <span class="eyebrow reveal"><b>06</b>{T.edgeEyebrow}</span>
           <h2 class="h2 reveal">{T.edgeTitle[0]}<span class="grad-text">{T.edgeTitle[1]}</span>{T.edgeTitle[2]}</h2>
           <p class="lead reveal">{T.edgeLead}</p>
         </div>
@@ -199,7 +202,7 @@ const secs = ids.map((id, i) => ({ id, label: T.secs[i] }));
   <section id="applications" class="section section--soft">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow reveal"><b>06</b>{T.secs[5]}</span>
+        <span class="eyebrow reveal"><b>07</b>{T.secs[6]}</span>
         <h2 class="h2 reveal">{T.appsTitle}</h2>
       </div>
       <div class="grid grid--4">

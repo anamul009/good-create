@@ -102,6 +102,25 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* ── Scroll story (@POP): the step crossing the trigger line drives the sticky stage
+     (mid-screen on desktop; below the sticky stage on phones) ── */
+  document.querySelectorAll('[data-story]').forEach(function (story) {
+    var stage = story.querySelector('[data-story-stage]');
+    var steps = story.querySelectorAll('[data-story-step]');
+    var list = story.querySelector('[data-story-steps]');
+    if (!stage || !steps.length || !('IntersectionObserver' in window)) return;
+    if (list) list.classList.add('is-live');
+    var setStep = function (el) {
+      stage.setAttribute('data-step', el.getAttribute('data-story-step'));
+      steps.forEach(function (s) { s.classList.toggle('is-active', s === el); });
+    };
+    setStep(steps[0]);
+    var sio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) setStep(en.target); });
+    }, { rootMargin: window.matchMedia('(min-width: 960px)').matches ? '-48% 0px -48% 0px' : '-72% 0px -24% 0px' });
+    steps.forEach(function (s) { sio.observe(s); });
+  });
+
   /* ── Hero video: honour reduced motion / data saver, allow pause ── */
   var video = document.querySelector('[data-hero-video]');
   var vToggle = document.querySelector('[data-video-toggle]');
