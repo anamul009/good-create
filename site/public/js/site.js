@@ -84,12 +84,49 @@
     Object.keys(map).forEach(function (id) { lio.observe(document.getElementById(id)); });
   }
 
+  /* ── Headline line reveal: split section titles into masked words
+     (single characters for Japanese); each visual line slides up in turn ── */
+  var TOKEN = /\s+|[「『（【〔“‘]*(?:[A-Za-z0-9@#&%'’.,:;\/\-–—!?]+|[^\sA-Za-z0-9])[、。，．」』）】〕”’！？：・ー…]*/g;
+  function splitHeading(h) {
+    h.setAttribute('aria-label', (h.innerText || h.textContent).replace(/\s+/g, ' ').trim());
+    var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+    while ((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(function (t) {
+      var parts = t.nodeValue.match(TOKEN);
+      if (!parts) return;
+      var frag = document.createDocumentFragment();
+      parts.forEach(function (p) {
+        if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(' ')); return; }
+        var w = document.createElement('span'), i = document.createElement('span');
+        w.className = 'lr-w'; w.setAttribute('aria-hidden', 'true');
+        i.className = 'lr-i'; i.textContent = p;
+        w.appendChild(i); frag.appendChild(w);
+      });
+      t.parentNode.replaceChild(frag, t);
+    });
+    h.classList.add('lr');
+  }
+  function timeLines(h) {
+    var base = parseFloat(h.style.transitionDelay) || 0, line = -1, top = null;
+    h.querySelectorAll('.lr-w').forEach(function (w) {
+      var y = w.getBoundingClientRect().top;
+      if (top === null || y > top + 4) { line++; top = y; }
+      w.firstChild.style.transitionDelay = base + line * 110 + 'ms';
+    });
+  }
+
   /* ── Reveal on scroll ── */
   var reveals = document.querySelectorAll('.reveal:not(.hero .reveal):not(.page-hero .reveal)');
   if (!reduceMotion && 'IntersectionObserver' in window) {
+    document.querySelectorAll('h2.reveal').forEach(function (h) {
+      if (!h.closest('.hero, .page-hero')) splitHeading(h);
+    });
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+        if (en.isIntersecting) {
+          if (en.target.classList.contains('lr')) timeLines(en.target);
+          en.target.classList.add('is-in'); io.unobserve(en.target);
+        }
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
     reveals.forEach(function (el, i) {
