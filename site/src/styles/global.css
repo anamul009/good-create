@@ -198,7 +198,7 @@ body.menu-open { overflow: hidden; }
     linear-gradient(90deg, rgba(6,13,28,.3) 0%, rgba(6,13,28,.08) 40%, rgba(6,13,28,0) 62%);
 }
 /* lighter video: bright footage, readability comes from the soft shade behind the text block (no text-shadow, so the type stays crisp) */
-.hero-media video { filter: brightness(1.2) saturate(1.06); }
+.hero-media video { filter: brightness(1.33) saturate(1.06); }
 .hero-inner { position: relative; width: 100%; padding-top: calc(var(--header-h) + 4rem); padding-bottom: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
 .hero .h-hero { margin: 1.5rem 0 1.75rem; max-width: 14em; }
 .hero .lead { color: rgba(255,255,255,.82); max-width: 36em; margin-bottom: 2.5rem; }
