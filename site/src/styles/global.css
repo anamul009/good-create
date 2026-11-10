@@ -1225,3 +1225,16 @@ h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.02em; }
 .lr-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
 .lr-i { display: inline-block; transform: translateY(105%); transition: transform 1s cubic-bezier(.2, .7, .1, 1); }
 .lr.is-in .lr-i { transform: none; }
+
+/* ── Japanese typography polish (2026-11-10) ──
+   Headings: proportional kana/punctuation (palt) with a little more tracking, the way
+   Japanese corporate sites set display type. Body: more air between lines and characters. */
+:lang(ja) :is(h1, h2, h3, h4, .h-hero, .h1, .h2, .about2-title, .msg-quote, .ed-title, .nav-link, .btn, .eyebrow, .news-tag, .tag) { font-feature-settings: "palt" 1; }
+:lang(ja) :is(h1, h2, h3, h4, .h-hero, .h1, .h2, .about2-title, .ed-title) { letter-spacing: .06em; }
+:lang(ja) .msg-quote { letter-spacing: .08em; }
+:lang(ja) body { line-height: 2; letter-spacing: .05em; }
+:lang(ja) .lead { line-height: 2.05; }
+:lang(ja) :is(.about2-title, .msg-quote, .ed-title, .lead) { word-break: auto-phrase; }
+.hero-news-link { grid-template-columns: auto auto auto 1fr 18px; }
+.hero-news-tag { font-size: .74rem; font-weight: 600; letter-spacing: .06em; padding: .2rem .6rem; border: 1px solid rgba(255,255,255,.4); border-radius: 4px; color: rgba(255,255,255,.88); white-space: nowrap; }
+@media (max-width: 640px) { .hero-news-link { grid-template-columns: auto 1fr 16px; } .hero-news-tag { display: none; } }

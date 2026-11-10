@@ -85,15 +85,34 @@
   }
 
   /* ── Headline line reveal: split section titles into masked words
-     (single characters for Japanese); each visual line slides up in turn ── */
+     (phrases for Japanese, so lines still break like word-break: auto-phrase);
+     each visual line slides up in turn ── */
   var TOKEN = /\s+|[「『（【〔“‘]*(?:[A-Za-z0-9@#&%'’.,:;\/\-–—!?]+|[^\sA-Za-z0-9])[、。，．」』）】〕”’！？：・ー…]*/g;
+  var CJK = /[぀-ヿ㐀-鿿＀-￯]/;
+  var TRAIL = /^[ぁ-ゟー、。，．」』）】〕”’！？：・…]+$/; // particles, okurigana, closing marks
+  var OPEN = /[「『（【〔“‘@#]$|^[ごお]$/; // opening marks and honorific prefixes join the next word
+  var ENDP = /[、。，．！？]$/;
+  var PUNCT = /^[、。，．」』）】〕”’！？：・…]+$/;
+  var jaSeg = window.Intl && Intl.Segmenter ? new Intl.Segmenter('ja', { granularity: 'word' }) : null;
+  function tokenize(text) {
+    if (!jaSeg || !CJK.test(text)) return text.match(TOKEN);
+    var out = [];
+    Array.from(jaSeg.segment(text)).forEach(function (s) {
+      var seg = s.segment, last = out.length ? out[out.length - 1] : null;
+      if (/^\s+$/.test(seg)) { out.push(' '); return; }
+      var glue = last && last !== ' ' && (OPEN.test(last) || PUNCT.test(seg) || (TRAIL.test(seg) && !ENDP.test(last) && !/^[ごお]$/.test(seg)));
+      if (glue) out[out.length - 1] = last + seg;
+      else out.push(seg);
+    });
+    return out;
+  }
   function splitHeading(h) {
     h.setAttribute('aria-label', (h.innerText || h.textContent).replace(/\s+/g, ' ').trim());
     var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT, null), nodes = [], n;
     while ((n = walker.nextNode())) nodes.push(n);
     nodes.forEach(function (t) {
-      var parts = t.nodeValue.match(TOKEN);
-      if (!parts) return;
+      var parts = tokenize(t.nodeValue);
+      if (!parts || !parts.length) return;
       var frag = document.createDocumentFragment();
       parts.forEach(function (p) {
         if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(' ')); return; }

@@ -236,6 +236,7 @@ const eco: EcoItem[] = [
           <a class="hero-news-link" href={L(`/news/${latest.slug}/`)}>
             <span class="hero-news-label">{T.news}</span>
             <time datetime={latest.date}>{formatDate(latest.date)}</time>
+            <span class="hero-news-tag">{latest.tag}</span>
             <span class="hero-news-title">{latest.title}</span>
             <Icon name="arrow" />
           </a>
