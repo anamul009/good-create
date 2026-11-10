@@ -163,8 +163,8 @@ const telHref = (tel: string) => `tel:+81${tel.replace(/^0/, '').replace(/-/g, '
             <address>{o.lines.map((l) => (<>{l}<br /></>))}</address>
             {(o.tel || o.fax) && (
               <p class="tel">
-                {o.tel && <>{UI.tel} <a href={telHref(o.tel)}>{o.tel}</a></>}
-                {o.fax && <><span class="sep">/</span>{UI.fax} {o.fax}</>}
+                {o.tel && <><span class="tel-k">{UI.tel}</span><a href={telHref(o.tel)}>{o.tel}</a></>}
+                {o.fax && <><span class="sep">/</span><span class="tel-k">{UI.fax}</span><span class="num">{o.fax}</span></>}
               </p>
             )}
           </div>

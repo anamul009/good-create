@@ -1239,3 +1239,12 @@ h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.02em; }
 .hero-news-link { grid-template-columns: auto auto auto 1fr 18px; }
 .hero-news-tag { font-size: .74rem; font-weight: 600; letter-spacing: .06em; padding: .2rem .6rem; border: 1px solid rgba(255,255,255,.4); border-radius: 4px; color: rgba(255,255,255,.88); white-space: nowrap; }
 @media (max-width: 640px) { .hero-news-link { grid-template-columns: auto 1fr 16px; } .hero-news-tag { display: none; } }
+
+/* ── Subpage polish (2026-11-10) ──
+   Japanese short text blocks break at phrase boundaries (no 「はでき／ず」 splits) and avoid
+   one-character last lines; card/statement text gets the same palt + tracking as headings. */
+:lang(ja) :is(.pvm-row p, .card p, .card .big, .timeline p, .feature-body p, .news-row p, .news-title, .office address, .ticks li, .trust-checks li, .trust-rec p, .page-hero .lead, .next-body p, .cta .lead) { word-break: auto-phrase; overflow-wrap: anywhere; }
+:is(.pvm-row p, .card p, .card .big, .timeline p, .feature-body p, .news-row p, .news-title, .prose p, .prose li, .facts dd, .next-body p) { text-wrap: pretty; }
+:lang(ja) :is(.pvm-row p, .card .big) { font-feature-settings: "palt" 1; letter-spacing: .05em; line-height: 1.6; }
+.office .tel-k { margin-right: .45em; color: var(--text-3); font-weight: 600; }
+.office .tel a, .office .tel .num { white-space: nowrap; }

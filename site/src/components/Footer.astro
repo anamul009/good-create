@@ -55,7 +55,7 @@ const enHref = lang === 'en' ? null : pathFor(Astro.url, 'en');
         <div>
           <h2>{o.label}</h2>
           <address>{o.lines.join(lang === 'ja' ? ' ' : ', ')}</address>
-          {o.tel && <p>{T.tel} {o.tel}</p>}
+          {o.tel && <p>{`${T.tel} ${o.tel}`}</p>}
         </div>
       ))}
     </div>
