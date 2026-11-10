@@ -158,6 +158,12 @@
     steps.forEach(function (s) { sio.observe(s); });
   });
 
+  /* ── Time-limited items (hero latest news): remove once data-expires has passed ── */
+  document.querySelectorAll('[data-expires]').forEach(function (el) {
+    var t = Date.parse(el.getAttribute('data-expires'));
+    if (!isNaN(t) && Date.now() >= t) el.remove();
+  });
+
   /* ── Hero video: honour reduced motion / data saver ── */
   var video = document.querySelector('[data-hero-video]');
   if (video) {

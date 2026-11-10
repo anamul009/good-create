@@ -176,7 +176,12 @@ const partners = coords.map(([lat, lon, label], i) => ({ name: G.names[i], lat, 
 const home = { name: G.homeLabel, lat: 34.3, lon: 134.0, label: { dx: 0, dy: 64, anchor: 'middle' as const } };
 
 const poster = await getImage({ src: heroPoster, format: 'webp', width: 1280 });
-const latest = news[0];
+const latest = [...news].sort((a, b) => b.date.localeCompare(a.date))[0];
+// The hero news bar shows the latest item for 30 days after its date (Japan time).
+// Left out at build time once expired; site.js also hides it on day 31 without a rebuild.
+const NEWS_DAYS = 30;
+const newsExpires = latest ? new Date(Date.parse(`${latest.date}T00:00:00+09:00`) + NEWS_DAYS * 864e5) : null;
+const showNews = !!newsExpires && Date.now() < newsExpires.getTime();
 const bySlug = (slug: string) => solutions.find((s) => s.slug === slug)!;
 const short: Record<string, { en: string; ja: string }> = {
   'secure-device': { en: 'Secure Device', ja: 'セキュア端末' },
@@ -222,16 +227,18 @@ const eco: EcoItem[] = [
         <a class="btn btn--glass" href={L('/technology/')}>{T.aboutPop}</a>
       </div>
     </div>
-    <div class="hero-news">
-      <div class="wrap">
-        <a class="hero-news-link" href={L(`/news/${latest.slug}/`)}>
-          <span class="hero-news-label">{T.news}</span>
-          <time datetime={latest.date}>{formatDate(latest.date)}</time>
-          <span class="hero-news-title">{latest.title}</span>
-          <Icon name="arrow" />
-        </a>
+    {showNews && (
+      <div class="hero-news" data-expires={newsExpires!.toISOString()}>
+        <div class="wrap">
+          <a class="hero-news-link" href={L(`/news/${latest.slug}/`)}>
+            <span class="hero-news-label">{T.news}</span>
+            <time datetime={latest.date}>{formatDate(latest.date)}</time>
+            <span class="hero-news-title">{latest.title}</span>
+            <Icon name="arrow" />
+          </a>
+        </div>
       </div>
-    </div>
+    )}
   </section>
 
   <!-- ═══ 01 About ═══ -->
