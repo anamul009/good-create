@@ -177,10 +177,13 @@ const home = { name: G.homeLabel, lat: 34.3, lon: 134.0, label: { dx: 0, dy: 64,
 
 const poster = await getImage({ src: heroPoster, format: 'webp', width: 1280 });
 const latest = [...news].sort((a, b) => b.date.localeCompare(a.date))[0];
-// The hero news bar shows the latest item for 30 days after its date (Japan time).
+// The hero news bar shows the latest item for 30 days (Japan time), counted from its date
+// or from NEWS_COUNT_FROM, whichever is later (so the current item gets a month from launch).
 // Left out at build time once expired; site.js also hides it on day 31 without a rebuild.
 const NEWS_DAYS = 30;
-const newsExpires = latest ? new Date(Date.parse(`${latest.date}T00:00:00+09:00`) + NEWS_DAYS * 864e5) : null;
+const NEWS_COUNT_FROM = '2026-11-10';
+const newsStart = latest ? (latest.date > NEWS_COUNT_FROM ? latest.date : NEWS_COUNT_FROM) : null;
+const newsExpires = newsStart ? new Date(Date.parse(`${newsStart}T00:00:00+09:00`) + NEWS_DAYS * 864e5) : null;
 const showNews = !!newsExpires && Date.now() < newsExpires.getTime();
 const bySlug = (slug: string) => solutions.find((s) => s.slug === slug)!;
 const short: Record<string, { en: string; ja: string }> = {
