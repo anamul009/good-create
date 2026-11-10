@@ -158,18 +158,12 @@
     steps.forEach(function (s) { sio.observe(s); });
   });
 
-  /* ── Hero video: honour reduced motion / data saver, allow pause ── */
+  /* ── Hero video: honour reduced motion / data saver ── */
   var video = document.querySelector('[data-hero-video]');
-  var vToggle = document.querySelector('[data-video-toggle]');
   if (video) {
     var saveData = navigator.connection && navigator.connection.saveData;
     var setPaused = function (paused) {
       if (paused) video.pause(); else { var p = video.play(); if (p && p.catch) p.catch(function () {}); }
-      if (vToggle) {
-        vToggle.setAttribute('aria-pressed', String(paused));
-        var label = vToggle.querySelector('.sr-only');
-        if (label) label.textContent = paused ? (vToggle.getAttribute('data-label-play') || 'Play background video') : (vToggle.getAttribute('data-label-pause') || 'Pause background video');
-      }
     };
     // Timeline of /media/hero.mp4 (same file as the original site):
     // 0-4.0s white logo intro, 4.0-22.3s city/product footage, 22.4s+ logo outro.
@@ -216,7 +210,6 @@
       video.addEventListener('ended', function () { video.currentTime = BODY_START; video.play().catch(function () {}); });
     }
     var userPaused = false;
-    if (vToggle) vToggle.addEventListener('click', function () { userPaused = !video.paused; endIntro(); setPaused(userPaused); });
   }
 
   /* ── Contact form ── */

@@ -208,15 +208,6 @@ body.menu-open { overflow: hidden; }
 @media (min-width: 900px) { .hero-foot { grid-template-columns: repeat(4, 1fr); } }
 .hero-foot strong { display: block; font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem); font-weight: 750; letter-spacing: -.02em; line-height: 1.1; }
 .hero-foot span { display: block; font-size: .85rem; color: rgba(255,255,255,.68); margin-top: .4rem; line-height: 1.45; }
-.video-toggle {
-  position: absolute; right: var(--gutter); top: calc(var(--header-h) + 1.25rem); z-index: 2;
-  width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(6,13,28,.3);
-  color: #fff; display: grid; place-items: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-}
-.video-toggle svg { width: 14px; height: 14px; }
-.video-toggle .i-play { display: none; }
-.video-toggle[aria-pressed='true'] .i-play { display: block; }
-.video-toggle[aria-pressed='true'] .i-pause { display: none; }
 
 /* ═════════════════════════ Page hero (inner) ═════════════════════════ */
 .page-hero { position: relative; min-height: clamp(460px, 62vh, 680px); display: flex; align-items: flex-end; color: #fff; overflow: hidden; background: var(--navy-900); }
@@ -544,7 +535,7 @@ a.chip:hover { background: #fff; color: var(--navy-900); }
 }
 
 @media print {
-  .site-header, .mobile-nav, .site-footer, .cta, .hero-media, .video-toggle { display: none !important; }
+  .site-header, .mobile-nav, .site-footer, .cta, .hero-media { display: none !important; }
   .hero, .page-hero { min-height: 0; color: #000; background: #fff; }
 }
 .muted-foot { color: var(--on-dark-3); font-size: .86rem; }
@@ -925,7 +916,6 @@ ul.dotted li::before { content: ''; position: absolute; left: 0; top: .72em; wid
 .hero.is-intro .hero-shade, .hero.is-intro .hero-inner, .hero.is-intro .hero-news { opacity: 0; }
 .hero.is-intro .reveal { animation: none; opacity: 0; }
 .hero.is-intro .hero-inner, .hero.is-intro .hero-news { pointer-events: none; }
-.hero.is-intro .video-toggle { border-color: rgba(10,23,48,.25); color: var(--navy-900); }
 /* header readable on the white intro frames */
 body.hero-intro.has-overlay-header .site-header:not(.is-scrolled):not(.menu-is-open) { background: rgba(255,255,255,.0); }
 body.hero-intro.has-overlay-header .site-header:not(.is-scrolled):not(.menu-is-open) .nav-link,
