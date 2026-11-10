@@ -5,6 +5,9 @@ import Footer from '../components/Footer.astro';
 import Intro from '../components/Intro.astro';
 import { getLang, t, pathFor, langs, defaultLang } from '../i18n';
 import { company } from '../data/content/en';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 interface Props { title?: string; description?: string; overlay?: boolean; }
 const lang = getLang(Astro.url);
@@ -13,6 +16,11 @@ const { title, overlay = true, description = T.defaultDescription } = Astro.prop
 const fullTitle = title ? `${title} — ${T.siteName}` : T.defaultTitle;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(`/og/${lang}.png`, Astro.site).href;
+// Cache-busting: public/js files are served with a 1-year immutable cache (.htaccess),
+// so each URL carries a short hash of the file's content and changes whenever the file does.
+const ver = (f: string) => createHash('sha256').update(readFileSync(resolve('public/js', f))).digest('hex').slice(0, 10);
+const introJs = `/js/intro.js?v=${ver('intro.js')}`;
+const siteJs = `/js/site.js?v=${ver('site.js')}`;
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/en/';
 // Organization structured data (Google knowledge panel). Facts from data/content/en.ts.
 const orgLd = {
@@ -79,8 +87,8 @@ const csp = [
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
     {isHome && <script type="application/ld+json" is:inline set:html={JSON.stringify(orgLd)} />}
-    <script is:inline src="/js/intro.js"></script>
-    <script is:inline src="/js/site.js" defer></script>
+    <script is:inline src={introJs}></script>
+    <script is:inline src={siteJs} defer></script>
   </head>
   <body class:list={[overlay && 'has-overlay-header']}>
     <Intro />

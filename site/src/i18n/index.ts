@@ -22,7 +22,10 @@ export function basePath(pathname: string): string {
 }
 
 export function pathFor(url: URL, lang: Lang): string {
-  return localize(lang, basePath(url.pathname));
+  const base = basePath(url.pathname);
+  // The 404 page has no per-language twin: switch to that language's home page instead.
+  if (/^\/404(\.html|\/)?$/.test(base)) return localize(lang, '/');
+  return localize(lang, base);
 }
 
 /** Pick the string for the current language from a { en, ja } pair. */
